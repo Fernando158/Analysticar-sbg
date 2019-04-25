@@ -15,7 +15,16 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'compose',                                   # Or path to database file if using sqlite3.
+        'USER': 'admin',                                     # Not used with sqlite3.
+        'PASSWORD': 'UJUKXXTRGJDPDQBH',                      # Not used with sqlite3.
+        'HOST': 'sl-us-south-1-portal.39.dblayer.com',       # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '62926',                                     # Set to empty string for default. Not used with sqlite3.
+    }
+}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'analysticar',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'analysticar.urls'
+ROOT_URLCONF = 'analysticar-django.urls'
 
 TEMPLATES = [
     {
@@ -62,23 +72,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
+                'django.template.context_processors.csrf',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'analysticar.wsgi.application'
+WSGI_APPLICATION = 'analysticar-django.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 
 # Password validation
@@ -118,3 +123,40 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+LOGGING = {
+     'version': 1,
+     'disable_existing_loggers': False,
+     'formatters': {
+         'ourFormatter': {
+             'format': '%(asctime)s:%(name)s:%(levelname)s:%(message)s',
+             'datefmt': '%m/%d/%Y %I:%M:%S',
+         },
+     },
+     'handlers': {
+         'theConsole': {
+             'class': 'logging.StreamHandler',
+             'formatter': 'ourFormatter',        
+         },
+     },
+     'root': {
+         'level': 'DEBUG',
+         'handlers': ['theConsole'],
+     },
+}
+
+LOGIN_URL = '/iniciar-sesion/'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'smarticket.suport@gmail.com'
+EMAIL_HOST_PASSWORD = 'asd123asd'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Analyticar'

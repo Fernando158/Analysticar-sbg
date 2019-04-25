@@ -18,4 +18,13 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-]
+    url(r'^$', views.home, name="home"),
+    url(r'^old$', views.homeOld, name="homeOld"),
+    url(r'^iniciar-sesion/$', views.iniciarSesion, name="iniciarSesion"),
+    url(r'^cerrar-sesion/$', views.cerrarSesion, name="cerrarSesion"),
+    url(r'^registrar-usuario/$', views.registrarUsuario, name="registrarUsuario"),
+    url(r'^perfil$', views.perfil, name="perfil"),
+    url(r'^patrones', views.patrones, name="patrones"),
+    url(r'^siniestralidad', views.siniestralidad, name="siniestralidad"),
+    url(r'^alertas$', views.alertas, name="alertas"),
+] + static(MEDIA_URL, document_root=MEDIA_ROOT)
