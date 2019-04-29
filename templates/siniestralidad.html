@@ -1,0 +1,1646 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript">
+    var factory = null;
+    var clientId = getUrlParam('id') || 'client_id';
+    var clientSecret = getUrlParam('secret') || 'client_secret';
+    var useSimpleModule = getUrlParam('simple').toLowerCase() !== 'false';
+    var dbuser = getUrlParam('dbuser') || '';
+    var dbpwd = getUrlParam('dbpwd') || '';
+    var sessionObj = null;
+    var cognosRootURL = null;
+    var tab = '&nbsp;&nbsp;&nbsp;&nbsp;';
+    var validPropertiesToEncrypt = useSimpleModule ? ['source.jdbc.schema', 'source.user', 'source.password', 'source.jdbc.jdbcUrl', 'source.srcUrl.sourceUrl'] : ['dataSource.0.schema', 'dataSource.0.user', 'dataSource.0.password',
+      'dataSource.0.jdbc.jdbcUrl', 'dataSource.0.csvUrl'
+    ];
+    var sampleSpec = {
+      "name": "New dashboard",
+      "layout": {
+        "id": "page0",
+        "items": [{
+          "id": "page1",
+          "items": [{
+            "id": "model0000015f112a1b00_00000004",
+            "style": {
+              "left": "65px",
+              "top": "21px",
+              "height": "420px",
+              "width": "500px"
+            },
+            "type": "widget"
+          }],
+          "type": "absolute",
+          "title": "Tab 1",
+          "templateName": "NoTemplate"
+        }],
+        "style": {
+          "height": "100%"
+        },
+        "type": "tab"
+      },
+      "theme": "defaultTheme",
+      "version": 1006,
+      "eventGroups": [{
+        "id": "page1:1",
+        "widgetIds": ["model0000015f112a1b00_00000004"]
+      }],
+      "pageContext": [],
+      "dataSources": {
+        "version": "1.0",
+        "sources": [{
+          "id": "model0000015f1129e423_00000001",
+          "assetId": "http://localhost:9080/temp-service/1606964b316d466fab46fc3240187044",
+          "type": "url",
+          "clientId": "myUniqueId123",
+          "module": {
+            "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+            "source": {
+              "id": "StringID",
+              "jdbc": {
+                "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+                "driverClassName": "com.ibm.db2.jcc.DB2Driver",
+                "schema": "GOSALEST"
+              },
+              "user": dbuser,
+              "password": dbpwd
+            },
+            "table": {
+              "name": "T1",
+              "description": "description of the table for visual hints ",
+              "column": [{
+                "name": "Year",
+                "description": "String",
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "label": "Year",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct",
+                "taxonomyFamily": "cYear"
+              }, {
+                "name": "Product line",
+                "description": "String",
+                "datatype": "VARCHAR(24)",
+                "nullable": true,
+                "label": "Product line",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct"
+              }, {
+                "name": "Order method type",
+                "datatype": "VARCHAR(11)",
+                "nullable": true,
+                "label": "Order method type",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct"
+              }, {
+                "name": "Retailer country",
+                "datatype": "VARCHAR(14)",
+                "nullable": true,
+                "label": "Retailer country",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct",
+                "taxonomyFamily": "cCountry"
+              }, {
+                "name": "Revenue",
+                "datatype": "DECIMAL(11,2)",
+                "nullable": true,
+                "label": "Revenue",
+                "usage": "fact",
+                "regularAggregate": "total"
+              }, {
+                "name": "Quantity",
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "label": "Quantity",
+                "usage": "fact",
+                "regularAggregate": "total"
+              }]
+            },
+            "label": "Module Name",
+            "identifier": "moduleId"
+          },
+          "name": "Test Source",
+          "shaping": {
+            "embeddedModuleUpToDate": true
+          }
+        }]
+      },
+      "widgets": {
+        "model0000015f112a1b00_00000004": {
+          "id": "model0000015f112a1b00_00000004",
+          "data": {
+            "dataViews": [{
+              "modelRef": "model0000015f1129e423_00000001",
+              "dataItems": [{
+                "id": "model0000015f112a1b00_00000000",
+                "itemId": "T1.Product_line",
+                "itemLabel": "Product Line"
+              }, {
+                "id": "model0000015f112a1b00_00000001",
+                "itemId": "T1.Revenue",
+                "itemLabel": "Revenue"
+              }]
+            }]
+          },
+          "slotmapping": {
+            "slots": [{
+              "name": "categories",
+              "dataItems": ["model0000015f112a1b00_00000000"],
+              "caption": "Bars"
+            }, {
+              "name": "values",
+              "dataItems": ["model0000015f112a1b00_00000001"],
+              "caption": "Length"
+            }]
+          },
+          "type": "live",
+          "name": "",
+          "visId": "com.ibm.vis.rave2bundlecolumn"
+        }
+      }
+    };
+    var sampleBikeShareRidesDemographModule = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_siniestralidad_v1.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_siniestralidad_v1",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Cliente",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "identifier",
+        "label": "Cliente",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Numeros_de_Alertas_emergencia",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Numeros_de_Alertas_emergencia",
+        "label": "Numeros de Alertas de emergencia",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Tiempo_reporte_siniestro",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Tiempo_reporte_siniestro",
+        "label": "Tiempo de reporte del siniestro a la aseguradora (min)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Número_parte_afectadas_colisión",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Número_parte_afectadas_colisión",
+        "label": "Número de parte afectadas en la colisión",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Provincia",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Provincia",
+        "label": "Provincia",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Ciudad",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Ciudad",
+        "label": "Ciudad",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Tipo_de_siniestro",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Tipo_de_siniestro",
+        "label": "Tipo de siniestro",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Estado_de_sentimiento",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Estado_de_sentimiento",
+        "label": "Estado de sentimiento del conductor",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Números_de_Alertas_tempranas",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Números_de_Alertas_tempranas",
+        "label": "Números de Alertas tempranas",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "detección_de_alerta",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "detección_de_alerta",
+        "label": "Detección de Alerta",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Patrón_de_manejo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Patrón de manejo",
+        "label": "Patrón de manejo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Número_de_Siniestro",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Número de Siniestro",
+        "label": "Número de Siniestro",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "sexo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "sexo",
+        "label": "sexo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "edad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "edad",
+        "label": "edad",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Modelo_Vehiculo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Modelo-Vehiculo",
+        "label": "Modelo-Vehiculo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Marca",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Marca",
+        "label": "Marca",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "color",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "color",
+        "label": "color",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+
+var sampleBike = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_siniestralidad_v7.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_siniestralidad_v2",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Cliente",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "identifier",
+        "label": "Cliente",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Numeros_de_Alertas_emergencia",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Numeros_de_Alertas_emergencia",
+        "label": "Numeros de Alertas de emergencia",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Número_parte_afectadas_colisión",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Número_parte_afectadas_colisión",
+        "label": "Número de parte afectadas en la colisión",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Provincia",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Provincia",
+        "label": "Provincia",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Ciudad",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Ciudad",
+        "label": "Ciudad",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Tipo_de_siniestro",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Tipo_de_siniestro",
+        "label": "Tipo de siniestro",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Estado_de_sentimiento",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Estado_de_sentimiento",
+        "label": "Estado de sentimiento del conductor",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Números_de_Alertas_tempranas",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Números_de_Alertas_tempranas",
+        "label": "Números de Alertas tempranas",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "detección_de_alerta",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "detección_de_alerta",
+        "label": "Detección de Alerta",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Patrón_de_manejo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Patrón de manejo",
+        "label": "Patrón de manejo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Número_de_Siniestro",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Número de Siniestro",
+        "label": "Número de Siniestro",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "sexo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "sexo",
+        "label": "sexo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Promedio_horas_uso_vehículo",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Promedio_horas_uso_vehículo",
+        "label": "Promedio de horas uso vehículo",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Uso_teléfono",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Uso_teléfono",
+        "label": "Uso del teléfono (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Eficiencia",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Eficiencia",
+        "label": "Eficiencia (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Promedio_Velocidad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Promedio_Velocidad_(km-h)",
+        "label": "Promedio de Velocidad",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Anticipación",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Anticipación",
+        "label": "Anticipación (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Legalidad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Legalidad",
+        "label": "Legalidad (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Porcentaje_Riesgo",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Porcentaje de Probabilidad (%)",
+        "label": "Porcentaje de Probabilidad (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Segmentación",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Segmentación",
+        "label": "Segmentación",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+
+var DemographModule = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_siniestralidad_pred_part2.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_siniestralidad_v3",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Mes",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Mes",
+        "label": "Mes",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Siniestro_Total_2015",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Total_2015",
+        "label": "Siniestro Total 2015",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Siniestro_Parcial_2015",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Parcial_2015",
+        "label": "Siniestro Parcial 2015",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Numero_de_Siniestro_2015",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Número_de_Siniestro_2015",
+        "label": "Número de Siniestro 2015",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Siniestro_Total_2016",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Total_2016",
+        "label": "Siniestro Total 2016",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Siniestro_Parcial_2016",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Parcial_2016",
+        "label": "Siniestro Parcial 2016",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Numero_de_Siniestro_2016",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Número_de_Siniestro_2016",
+        "label": "Número de Siniestro 2016",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Siniestro_Total_2017",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Total_2017",
+        "label": "Siniestro Total 2017",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Siniestro_Parcial_2017",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Siniestro_Parcial_2017",
+        "label": "Siniestro Parcial 2017",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Numero_de_Siniestro_2017",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Número_de_Siniestro_2017",
+        "label": "Número de Siniestro 2017",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+
+    // Use the old module spec
+    if (!useSimpleModule) {
+      sampleSpec = {
+        "name": "New dashboard",
+        "layout": {
+          "id": "page0",
+          "items": [{
+            "id": "page1",
+            "items": [{
+              "id": "model0000015f112a1b00_00000004",
+              "style": {
+                "left": "65px",
+                "top": "21px",
+                "height": "420px",
+                "width": "500px"
+              },
+              "type": "widget"
+            }],
+            "type": "absolute",
+            "title": "Tab 1",
+            "templateName": "NoTemplate"
+          }],
+          "style": {
+            "height": "100%"
+          },
+          "type": "tab"
+        },
+        "theme": "defaultTheme",
+        "version": 1006,
+        "eventGroups": [{
+          "id": "page1:1",
+          "widgetIds": ["model0000015f112a1b00_00000004"]
+        }],
+        "pageContext": [],
+        "dataSources": {
+          "version": "1.0",
+          "sources": [{
+            "id": "model0000015f1129e423_00000001",
+            "assetId": "http://localhost:9080/temp-service/1606964b316d466fab46fc3240187044",
+            "type": "url",
+            "clientId": "myUniqueId123",
+            "module": {
+              "version": "4.0",
+              "container": "A_DashDb.A_DashDb.null.GOSALEST",
+              "dataSource": [{
+                "schema": "GOSALEST",
+                "jdbc": {
+                  "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+                  "driverClassName": "com.ibm.db2.jcc.DB2Driver"
+                },
+                "user": dbuser,
+                "password": dbpwd,
+                "table": [{
+                  "tableItem": [{
+                    "column": {
+                      "datatype": "SMALLINT",
+                      "nullable": true,
+                      "vendorType": "SMALLINT",
+                      "name": "Year"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(24)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Product line"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(11)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Order method type"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(14)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Retailer country"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "DECIMAL(11,2)",
+                      "nullable": true,
+                      "vendorType": "DECIMAL",
+                      "name": "Revenue"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "SMALLINT",
+                      "nullable": true,
+                      "vendorType": "SMALLINT",
+                      "name": "Quantity"
+                    }
+                  }],
+                  "name": "T1"
+                }],
+                "name": "A_DashDb..GOSALEST"
+              }],
+              "querySubject": [{
+                "ref": ["T1"],
+                "item": [{
+                  "queryItem": {
+                    "identifier": "Year_",
+                    "label": "Year",
+                    "expression": "Year",
+                    "usage": "identifier",
+                    "datatype": "SMALLINT",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct",
+                    "taxonomy": [{
+                      "domain": "cognos",
+                      "family": "cYear",
+                      "class": "cTime"
+                    }]
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Product_line",
+                    "label": "Product Line",
+                    "expression": "Product line",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(24)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Order_method_type",
+                    "label": "Order Method Type",
+                    "expression": "Order method type",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(11)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Retailer_country",
+                    "label": "Retailer Country",
+                    "expression": "Retailer country",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(14)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct",
+                    "taxonomy": [{
+                      "domain": "cognos",
+                      "family": "cCountry",
+                      "class": "cGeoLocation"
+                    }]
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Revenue",
+                    "label": "Revenue",
+                    "expression": "Revenue",
+                    "usage": "fact",
+                    "datatype": "DECIMAL(11,2)",
+                    "nullable": true,
+                    "regularAggregate": "total"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Quantity",
+                    "label": "Quantity",
+                    "expression": "Quantity",
+                    "usage": "fact",
+                    "datatype": "SMALLINT",
+                    "nullable": true,
+                    "regularAggregate": "total"
+                  }
+                }],
+                "identifier": "T1",
+                "label": "T1"
+              }],
+              "filter": [],
+              "calculation": [],
+              "relationship": [],
+              "identifier": "Ab_Ab_nl_GT_pe.base",
+              "label": "GOSALEST"
+            },
+            "name": "Test Source",
+            "shaping": {
+              "embeddedModuleUpToDate": true
+            }
+          }]
+        },
+        "widgets": {
+          "model0000015f112a1b00_00000004": {
+            "id": "model0000015f112a1b00_00000004",
+            "data": {
+              "dataViews": [{
+                "modelRef": "model0000015f1129e423_00000001",
+                "dataItems": [{
+                  "id": "model0000015f112a1b00_00000000",
+                  "itemId": "T1.Product_line",
+                  "itemLabel": "Product Line"
+                }, {
+                  "id": "model0000015f112a1b00_00000001",
+                  "itemId": "T1.Revenue",
+                  "itemLabel": "Revenue"
+                }]
+              }]
+            },
+            "slotmapping": {
+              "slots": [{
+                "name": "categories",
+                "dataItems": ["model0000015f112a1b00_00000000"],
+                "caption": "Bars"
+              }, {
+                "name": "values",
+                "dataItems": ["model0000015f112a1b00_00000001"],
+                "caption": "Length"
+              }]
+            },
+            "type": "live",
+            "name": "",
+            "visId": "com.ibm.vis.rave2bundlecolumn"
+          }
+        }
+      };
+
+      sampleModule = {
+        "version": "4.0",
+        "container": "A_DashDb.A_DashDb.null.GOSALEST",
+        "dataSource": [{
+          "schema": "GOSALEST",
+          "jdbc": {
+            "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+            "driverClassName": "com.ibm.db2.jcc.DB2Driver"
+          },
+          "user": dbuser,
+          "password": dbpwd,
+          "table": [{
+            "tableItem": [{
+              "column": {
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "vendorType": "SMALLINT",
+                "name": "Year"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(24)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Product line"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(11)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Order method type"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(14)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Retailer country"
+              }
+            }, {
+              "column": {
+                "datatype": "DECIMAL(11,2)",
+                "nullable": true,
+                "vendorType": "DECIMAL",
+                "name": "Revenue"
+              }
+            }, {
+              "column": {
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "vendorType": "SMALLINT",
+                "name": "Quantity"
+              }
+            }],
+            "name": "T1"
+          }],
+          "name": "A_DashDb..GOSALEST"
+        }],
+        "querySubject": [{
+          "ref": ["T1"],
+          "item": [{
+            "queryItem": {
+              "identifier": "Year_",
+              "label": "Year",
+              "expression": "Year",
+              "usage": "identifier",
+              "datatype": "SMALLINT",
+              "nullable": true,
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cYear",
+                "class": "cTime"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Product_line",
+              "label": "Product Line",
+              "expression": "Product line",
+              "usage": "identifier",
+              "datatype": "VARCHAR(24)",
+              "nullable": true,
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Order_method_type",
+              "label": "Order Method Type",
+              "expression": "Order method type",
+              "usage": "identifier",
+              "datatype": "VARCHAR(11)",
+              "nullable": true,
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Retailer_country",
+              "label": "Retailer Country",
+              "expression": "Retailer country",
+              "usage": "identifier",
+              "datatype": "VARCHAR(14)",
+              "nullable": true,
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cCountry",
+                "class": "cGeoLocation"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Revenue",
+              "label": "Revenue",
+              "expression": "Revenue",
+              "usage": "fact",
+              "datatype": "DECIMAL(11,2)",
+              "nullable": true,
+              "regularAggregate": "total"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Quantity",
+              "label": "Quantity",
+              "expression": "Quantity",
+              "usage": "fact",
+              "datatype": "SMALLINT",
+              "nullable": true,
+              "regularAggregate": "total"
+            }
+          }],
+          "identifier": "T1",
+          "label": "T1"
+        }],
+        "filter": [],
+        "calculation": [],
+        "relationship": [],
+        "identifier": "Ab_Ab_nl_GT_pe.base",
+        "label": "GOSALEST"
+      };
+
+      sampleCSVModule = {
+        "version": "5.0",
+        "dataSource": [{
+          "csvUrl": "/daas/dataSetDemo.csv",
+          "databaseType": "PARQUET",
+          "table": [{
+            "numberOfRows": 84672,
+            "tableItem": [{
+              "column": {
+                "datatype": "BIGINT",
+                "vendorType": "INT64",
+                "name": "Year_",
+                "description": "Year"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(24)",
+                "vendorType": "STRING(24)",
+                "name": "Product_line",
+                "description": "Product line"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(17)",
+                "vendorType": "STRING(17)",
+                "name": "Order_method_type",
+                "description": "Order method type"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(16)",
+                "vendorType": "STRING(16)",
+                "name": "Retailer_country",
+                "description": "Retailer country"
+              }
+            }, {
+              "column": {
+                "datatype": "DOUBLE",
+                "vendorType": "FLOAT64",
+                "name": "Revenue",
+                "description": "Revenue"
+              }
+            }, {
+              "column": {
+                "datatype": "BIGINT",
+                "vendorType": "INT64",
+                "name": "Quantity",
+                "description": "Quantity"
+              }
+            }],
+            "name": "dataSetDemo_csv"
+          }],
+          "name": "dataSetDemo_csv"
+        }],
+        "querySubject": [{
+          "ref": ["dataSetDemo_csv"],
+          "item": [{
+            "queryItem": {
+              "identifier": "Year_",
+              "description": "Year",
+              "label": "Year",
+              "hidden": false,
+              "expression": "Year_",
+              "usage": "attribute",
+              "datatype": "BIGINT",
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cYear",
+                "class": "cTime"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Product_line",
+              "description": "Product line",
+              "label": "Product line",
+              "hidden": false,
+              "expression": "Product_line",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(24)",
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Order_method_type",
+              "description": "Order method type",
+              "label": "Order method type",
+              "hidden": false,
+              "expression": "Order_method_type",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(17)",
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Retailer_country",
+              "description": "Retailer country",
+              "label": "Retailer country",
+              "hidden": false,
+              "expression": "Retailer_country",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(16)",
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cCountry",
+                "class": "cGeoLocation"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Revenue",
+              "description": "Revenue",
+              "label": "Revenue",
+              "hidden": false,
+              "expression": "Revenue",
+              "usage": "fact",
+              "datatype": "DOUBLE",
+              "regularAggregate": "total"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Quantity",
+              "description": "Quantity",
+              "label": "Quantity",
+              "hidden": false,
+              "expression": "Quantity",
+              "usage": "fact",
+              "datatype": "BIGINT",
+              "regularAggregate": "total"
+            }
+          }],
+          "identifier": "dataSetDemo_csv",
+          "label": "Data Set Demo Csv"
+        }],
+        "identifier": "ds.dataSetDemo_csv.base",
+        "label": "dataSetDemo.csv"
+      };
+    }
+
+    function getUrlParam(name) {
+      var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      return (results === null) ? '' : results[1];
+    }
+
+    function execute() {
+      var script = document.getElementById('actionScript').textContent;
+      console.log(script)
+      try {
+        eval(script);
+      } catch (e) {
+        alert('error encountered, see console.')
+        console.error(e);
+      }
+    }
+
+    function getNewSessionScript() {
+      return '' +
+        'window.newSession(\'' + clientId + '\',\'' + clientSecret + '\', {' +
+        '<br>' + tab + '\'expiresIn\': 3600,' +
+        '<br>' + tab + '\'webDomain\': \'SAMEORIGIN\'' +
+        '<br>});';
+    }
+
+    /*$.getJSON("data", function(datos) {
+        alert("Dato: " + datos["name"]);
+        console.log(datos)
+        $.each(datos["primos"], function(idx,primo) {
+            alert("Numero primo: " + primo);
+        });
+    });*/
+
+    function prueba() { window.api = new CognosApi({    cognosRootURL: 'https://dde-us-south.analytics.ibm.com/daas/',    sessionCode: '{{sessionCode}}',    language: 'en',    node: document.getElementById('containerDivId')});window.api.initialize().then(function() {    console.log('API created successfully.'); prueba2()}, function(err) {    console.log('Failed to create API. ' + err.message);});
+      }
+
+    function prueba2(){
+      window.api.dashboard.openDashboard({    dashboardSpec: {"name":"New dashboard","layout":{"id":"page0","css":"fill-transparent","items":[{"id":"page1","items":[{"id":"page2","css":"templateBox aspectRatio_default","items":[{"id":"page3","style":{"top":"0%","left":"0%","right":"0%","bottom":"75%"},"type":"templateDropZone","templateName":"dz1"},{"id":"page4","css":"noBorderTop","style":{"top":"25%","left":"0%","right":"0%","bottom":"0%"},"type":"templateDropZone","templateName":"dz2"},{"id":"model00000169debc4d3e_00000003","style":{"left":"18.303145853193517%","top":"24.61005199306759%","height":"15.077989601386482%","width":"14.871306005719733%"},"type":"widget","relatedLayouts":""},{"id":"model00000169debc8826_00000002","style":{"left":"42.42135367016206%","top":"24.61005199306759%","height":"15.424610051993067%","width":"14.966634890371783%"},"type":"widget","relatedLayouts":""},{"id":"model00000169debcf830_00000002","style":{"left":"67.39752144899904%","top":"24.61005199306759%","height":"15.59792027729636%","width":"15.061963775023832%"},"type":"widget","relatedLayouts":""},{"id":"model00000169dec6ffcc_00000000","style":{"left":"0.09532888465204957%","top":"46.79376083188908%","height":"70.5372616984402%","width":"46.23450905624404%"},"type":"widget","relatedLayouts":""},{"id":"model00000169dec8a6e6_00000000","from":"model00000169dec4de50_00000000","style":{"width":"45.09056244041945%","height":"8.838821490467938%","left":"0%","top":"44.36741767764298%"},"type":"widget","relatedLayouts":"","clones":2},{"id":"model00000169deca4de5_00000000","style":{"left":"53.57483317445186%","top":"46.79376083188908%","height":"74.52339688041594%","width":"46.23450905624404%","opacity":1},"type":"widget","relatedLayouts":""},{"id":"model00000169ded0be6d_00000000","from":"model00000169dec8a6e6_00000000","style":{"width":"30.60057197330791%","height":"9.01213171577123%","left":"54.71877979027646%","top":"44.36741767764298%"},"type":"widget","relatedLayouts":"","clones":1},{"id":"model0000016a0d56f861_00000000","from":"model00000169dec3ba7f_00000000","style":{"width":"14.775977121067683%","height":"8.838821490467938%","left":"18.303145853193517%","top":"23.050259965337954%"},"type":"widget","relatedLayouts":"","clones":6},{"id":"model0000016a0d582bc8_00000000","from":"model0000016a0d56f861_00000000","style":{"width":"16.873212583412773%","height":"8.492201039861351%","left":"42.42135367016206%","top":"23.050259965337954%"},"type":"widget","relatedLayouts":"","clones":6},{"id":"model0000016a0d596b72_00000000","from":"model0000016a0d582bc8_00000000","style":{"width":"14.871306005719733%","height":"8.838821490467938%","left":"67.49285033365109%","top":"22.703639514731368%"},"type":"widget","relatedLayouts":"","clones":5},{"id":"model0000016a2c922985_00000000","from":"model0000016a274fdcc6_00000000","style":{"width":"16.11058150619638%","height":"14.211438474870018%","left":"83.60343183984747%","top":"0.1733102253032929%"},"type":"widget","relatedLayouts":"","clones":1}],"type":"scalingAbsolute"}],"type":"container","title":{"translationTable":{"Default":"KPIS"}},"templateName":"Template2"},{"id":"model0000016a0d8af37e_00000000","items":[{"id":"model0000016a0d8af37f_00000000","css":"templateBox aspectRatio_default","items":[{"id":"model0000016a0d8af37f_00000001","style":{"top":"0%","left":"0%","right":"0%","bottom":"75%"},"type":"templateDropZone","templateName":"dz1"},{"id":"model0000016a0d8af37f_00000002","css":"noBorderTop","style":{"top":"25%","left":"0%","right":"0%","bottom":"0%"},"type":"templateDropZone","templateName":"dz2","relatedLayouts":""},{"id":"model0000016a0d97d5bc_00000000","style":{"left":"0.09532888465204957%","top":"24.783362218370883%","height":"42.287694974003465%","width":"99.8093422306959%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a0d9fd460_00000000","from":"model00000169e3a9607c_00000000","style":{"width":"50.047664442326024%","height":"9.01213171577123%","left":"0.09532888465204957%","top":"22.357019064124785%"},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a0dc26ed7_00000000","style":{"left":"0%","top":"71.57712305025997%","height":"42.46100519930676%","width":"99.8093422306959%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a0dd57ee4_00000000","from":"model0000016a0d9fd460_00000000","style":{"width":"61.105815061963774%","height":"9.01213171577123%","left":"0.09532888465204957%","top":"69.32409012131716%"},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a274fdcc6_00000000","from":"model0000016a0d8bb82f_00000000","style":{"width":"16.11058150619638%","height":"14.211438474870018%","left":"83.60343183984747%","top":"0.1733102253032929%"},"type":"widget","relatedLayouts":"","clones":2}],"type":"scalingAbsolute"}],"type":"container","title":{"translationTable":{"Default":"Perfiles"}},"templateName":"Template2"}],"style":{"height":"100%"},"type":"tab","fillColor":"transparent"},"theme":"darkTheme","version":1009,"eventGroups":[{"id":"page1:1","widgetIds":["model00000169debc4d3e_00000003","model00000169debc8826_00000002","model00000169debcf830_00000002","model00000169dec6ffcc_00000000","model00000169deca4de5_00000000"]},{"id":"model0000016a0d8af37e_00000000:1","widgetIds":["model0000016a0d97d5bc_00000000","model0000016a0dc26ed7_00000000"]}],"properties":{"defaultLocale":"Default"},"dataSources":{"version":"1.0","sources":[{"id":"model00000169deb68e5c_00000002","assetId":"assetId00000169deb68e5c_00000000","clientId":"myUniqueId222","module":{"xsd":"https://ibm.com/daas/module/1.0/module.xsd","source":{"id":"CSV_File","srcUrl":{"sourceUrl":"https://analyticar-sbg.mybluemix.net/static/Data_siniestralidad_v1.csv","mimeType":"text/csv","property":[{"name":"separator","value":","},{"name":"ColumnNamesLine","value":"true"}]}},"table":{"name":"Data_siniestralidad_v1","description":"description of the table for visual hints","column":[{"name":"Cliente","datatype":"NVARCHAR(256)","nullable":true,"description":"identifier","label":"Cliente","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Numeros_de_Alertas_emergencia","datatype":"BIGINT","nullable":true,"description":"Numeros_de_Alertas_emergencia","label":"Numeros de Alertas de emergencia","usage":"fact","regularAggregate":"total"},{"name":"Tiempo_reporte_siniestro","datatype":"BIGINT","nullable":true,"description":"Tiempo_reporte_siniestro","label":"Tiempo de reporte del siniestro a la aseguradora (min)","usage":"fact","regularAggregate":"total"},{"name":"Número_parte_afectadas_colisión","datatype":"BIGINT","nullable":true,"description":"Número_parte_afectadas_colisión","label":"Número de parte afectadas en la colisión","usage":"fact","regularAggregate":"total"},{"name":"Provincia","datatype":"NVARCHAR(256)","nullable":true,"description":"Provincia","label":"Provincia","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Ciudad","datatype":"NVARCHAR(256)","nullable":true,"description":"Ciudad","label":"Ciudad","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Tipo_de_siniestro","datatype":"NVARCHAR(256)","nullable":true,"description":"Tipo_de_siniestro","label":"Tipo de siniestro","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Estado_de_sentimiento","datatype":"NVARCHAR(256)","nullable":true,"description":"Estado_de_sentimiento","label":"Estado de sentimiento del conductor","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Números_de_Alertas_tempranas","datatype":"BIGINT","nullable":true,"description":"Números_de_Alertas_tempranas","label":"Números de Alertas tempranas","usage":"fact","regularAggregate":"total"},{"name":"detección_de_alerta","datatype":"NVARCHAR(256)","nullable":true,"description":"detección_de_alerta","label":"Detección de Alerta","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Patrón_de_manejo","datatype":"NVARCHAR(256)","nullable":true,"description":"Patrón de manejo","label":"Patrón de manejo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Número_de_Siniestro","datatype":"BIGINT","nullable":true,"description":"Número de Siniestro","label":"Número de Siniestro","usage":"fact","regularAggregate":"total"},{"name":"sexo","datatype":"NVARCHAR(256)","nullable":true,"description":"sexo","label":"sexo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"edad","datatype":"BIGINT","nullable":true,"description":"edad","label":"edad","usage":"fact","regularAggregate":"total"},{"name":"Modelo_Vehiculo","datatype":"NVARCHAR(256)","nullable":true,"description":"Modelo-Vehiculo","label":"Modelo-Vehiculo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Marca","datatype":"NVARCHAR(256)","nullable":true,"description":"Marca","label":"Marca","usage":"attribute","regularAggregate":"countDistinct"},{"name":"color","datatype":"NVARCHAR(256)","nullable":true,"description":"color","label":"color","usage":"attribute","regularAggregate":"countDistinct"}]},"label":"Module Name","identifier":"moduleId"},"name":"Data_siniestralidad_v1","shaping":{"shapingId":"shaping00000169e398c90b_00000000","embeddedModuleUpToDate":false,"moserJSON":{"version":"5.0.1","container":"C","useSpec":[{"identifier":"ES","type":"url","storeID":"baseModule","imports":"*"}],"expressionLocale":"en-us","calculation":[{"expression":"Data_siniestralidad_v1.Tiempo_reporte_siniestro + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Tiempo_promedio_en_reportar_el_siniestro","label":"Tiempo promedio en reportar el siniestro","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Tiempo promedio en reportar el siniestro\",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_siniestralidad_v1.Tiempo_reporte_siniestro\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]},{"expression":"Data_siniestralidad_v1.Número_parte_afectadas_colisión + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Promedio_de_número_de_parte_afectadas_del_vehículo_en_siniestro","label":"Promedio de número de parte afectadas del vehículo en siniestro","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Promedio de número de parte afectadas del vehículo en siniestro\",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_siniestralidad_v1.Número_parte_afectadas_colisión\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]}],"metadataTreeView":[{"folderItem":[{"ref":"Tiempo_promedio_en_reportar_el_siniestro"},{"ref":"Promedio_de_número_de_parte_afectadas_del_vehículo_en_siniestro"}]}],"dataRetrievalMode":"liveConnection","identifier":"newModel","label":"newModel"}}},{"id":"model0000016a0d8a9e09_00000002","assetId":"assetId0000016a0d8a9e09_00000000","clientId":"myUniqueId223","module":{"xsd":"https://ibm.com/daas/module/1.0/module.xsd","source":{"id":"CSV_File","srcUrl":{"sourceUrl":"https://analyticar-sbg.mybluemix.net/static/Data_siniestralidad_v7.csv","mimeType":"text/csv","property":[{"name":"separator","value":","},{"name":"ColumnNamesLine","value":"true"}]}},"table":{"name":"Data_siniestralidad_v2","description":"description of the table for visual hints","column":[{"name":"Cliente","datatype":"NVARCHAR(256)","nullable":true,"description":"identifier","label":"Cliente","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Numeros_de_Alertas_emergencia","datatype":"BIGINT","nullable":true,"description":"Numeros_de_Alertas_emergencia","label":"Numeros de Alertas de emergencia","usage":"fact","regularAggregate":"total"},{"name":"Número_parte_afectadas_colisión","datatype":"BIGINT","nullable":true,"description":"Número_parte_afectadas_colisión","label":"Número de parte afectadas en la colisión","usage":"fact","regularAggregate":"total"},{"name":"Provincia","datatype":"NVARCHAR(256)","nullable":true,"description":"Provincia","label":"Provincia","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Ciudad","datatype":"NVARCHAR(256)","nullable":true,"description":"Ciudad","label":"Ciudad","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Tipo_de_siniestro","datatype":"NVARCHAR(256)","nullable":true,"description":"Tipo_de_siniestro","label":"Tipo de siniestro","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Estado_de_sentimiento","datatype":"NVARCHAR(256)","nullable":true,"description":"Estado_de_sentimiento","label":"Estado de sentimiento del conductor","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Números_de_Alertas_tempranas","datatype":"BIGINT","nullable":true,"description":"Números_de_Alertas_tempranas","label":"Números de Alertas tempranas","usage":"fact","regularAggregate":"total"},{"name":"detección_de_alerta","datatype":"NVARCHAR(256)","nullable":true,"description":"detección_de_alerta","label":"Detección de Alerta","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Patrón_de_manejo","datatype":"NVARCHAR(256)","nullable":true,"description":"Patrón de manejo","label":"Patrón de manejo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Número_de_Siniestro","datatype":"BIGINT","nullable":true,"description":"Número de Siniestro","label":"Número de Siniestro","usage":"fact","regularAggregate":"total"},{"name":"sexo","datatype":"NVARCHAR(256)","nullable":true,"description":"sexo","label":"sexo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Promedio_horas_uso_vehículo","datatype":"DOUBLE","nullable":true,"description":"Promedio_horas_uso_vehículo","label":"Promedio de horas uso vehículo","usage":"fact","regularAggregate":"countDistinct"},{"name":"Uso_teléfono","datatype":"BIGINT","nullable":true,"description":"Uso_teléfono","label":"Uso del teléfono (%)","usage":"fact","regularAggregate":"total"},{"name":"Eficiencia","datatype":"BIGINT","nullable":true,"description":"Eficiencia","label":"Eficiencia (%)","usage":"fact","regularAggregate":"total"},{"name":"Promedio_Velocidad","datatype":"BIGINT","nullable":true,"description":"Promedio_Velocidad_(km-h)","label":"Promedio de Velocidad","usage":"fact","regularAggregate":"total"},{"name":"Anticipación","datatype":"BIGINT","nullable":true,"description":"Anticipación","label":"Anticipación (%)","usage":"fact","regularAggregate":"total"},{"name":"Legalidad","datatype":"BIGINT","nullable":true,"description":"Legalidad","label":"Legalidad (%)","usage":"fact","regularAggregate":"total"},{"name":"Porcentaje_Riesgo","datatype":"BIGINT","nullable":true,"description":"Porcentaje de Probabilidad (%)","label":"Porcentaje de Probabilidad (%)","usage":"fact","regularAggregate":"total"},{"name":"Segmentación","datatype":"NVARCHAR(256)","nullable":true,"description":"Segmentación","label":"Segmentación","usage":"attribute","regularAggregate":"countDistinct"}]},"label":"Module Name","identifier":"moduleId"},"name":"Data_siniestralidad_v2","shaping":{"shapingId":"shaping0000016a0d9e7e69_00000000","embeddedModuleUpToDate":false,"moserJSON":{"version":"5.0.1","container":"C","useSpec":[{"identifier":"ES","type":"url","storeID":"baseModule","imports":"*"}],"expressionLocale":"en-us","calculation":[{"expression":"Data_siniestralidad_v2.Porcentaje_Riesgo + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Porcentaje_de_Riesgo","label":"Porcentaje de Riesgo (%) ","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Porcentaje de Riesgo (%) \",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_siniestralidad_v2.Porcentaje_Riesgo\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]}],"metadataTreeView":[{"folderItem":[{"ref":"Porcentaje_de_Riesgo"}]}],"dataRetrievalMode":"liveConnection","identifier":"newModel","label":"newModel"}}}]},"pageContext":[{"origin":"filter","table":"","alias":"0","sourceId":"model00000169deb68e5c_00000002","scope":"page1","hierarchyNames":["Provincia"],"hierarchyUniqueNames":["Data_siniestralidad_v1.Provincia"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169deb68e5c_00000002","scope":"page1","hierarchyNames":["sexo"],"hierarchyUniqueNames":["Data_siniestralidad_v1.sexo"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169deb68e5c_00000002","scope":"page1","hierarchyNames":["Tipo de siniestro"],"hierarchyUniqueNames":["Data_siniestralidad_v1.Tipo_de_siniestro"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169deb68e5c_00000002","scope":"page1","hierarchyNames":["Ciudad"],"hierarchyUniqueNames":["Data_siniestralidad_v1.Ciudad"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model0000016a0d8a9e09_00000002","scope":"model0000016a0d8af37e_00000000","hierarchyNames":["Provincia"],"hierarchyUniqueNames":["Data_siniestralidad_v2.Provincia"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model0000016a0d8a9e09_00000002","scope":"model0000016a0d8af37e_00000000","hierarchyNames":["Ciudad"],"hierarchyUniqueNames":["Data_siniestralidad_v2.Ciudad"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model0000016a0d8a9e09_00000002","scope":"model0000016a0d8af37e_00000000","hierarchyNames":["Cliente"],"hierarchyUniqueNames":["Data_siniestralidad_v2.Cliente"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model0000016a0d8a9e09_00000002","scope":"model0000016a0d8af37e_00000000","hierarchyNames":["Segmentación"],"hierarchyUniqueNames":["Data_siniestralidad_v2.Segmentación"],"isNamedSet":false}],"drillThrough":[],"widgets":{"model00000169debc4d3e_00000003":{"id":"model00000169debc4d3e_00000003","data":{"dataViews":[{"modelRef":"model00000169deb68e5c_00000002","dataItems":[{"id":"model00000169debc4d3e_00000000","itemId":"Data_siniestralidad_v1.Número_de_Siniestro","itemLabel":"Número de Siniestro"}],"id":"model00000169debc4d3e_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169debc4d3e_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169debc8826_00000002":{"id":"model00000169debc8826_00000002","data":{"dataViews":[{"modelRef":"model00000169deb68e5c_00000002","dataItems":[{"id":"model00000169debc8825_00000000","itemId":"Data_siniestralidad_v1.Numeros_de_Alertas_emergencia","itemLabel":"Numeros de Alertas de emergencia","aggregate":"sum"}],"id":"model00000169debc8826_00000000"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169debc8825_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169debcf830_00000002":{"id":"model00000169debcf830_00000002","data":{"dataViews":[{"modelRef":"model00000169deb68e5c_00000002","dataItems":[{"id":"model00000169debcf82f_00000000","itemId":"Data_siniestralidad_v1.Números_de_Alertas_tempranas","itemLabel":"Números de Alertas tempranas","aggregate":"sum"}],"id":"model00000169debcf830_00000000"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169debcf82f_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"borderColor":"transparent"},"model00000169dec6ffcc_00000000":{"id":"model00000169dec6ffcc_00000000","data":{"dataViews":[{"modelRef":"model00000169deb68e5c_00000002","dataItems":[{"id":"model00000169dec71aa0_00000001","itemId":"Data_siniestralidad_v1.Provincia","itemLabel":"Provincia"},{"id":"model0000016a21947c08_00000000","itemId":"Promedio_de_número_de_parte_afectadas_del_vehículo_en_siniestro","itemLabel":"Promedio de número de parte afectadas del vehículo en siniestro"}],"id":"model00000169dec71aa0_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"locations","dataItems":["model00000169dec71aa0_00000001"],"dataItemSettings":[],"caption":"Locations","id":"locations","layerId":"data.region"},{"name":"locationColor","dataItems":["model0000016a21947c08_00000000"],"caption":"Location color","id":"locationColor","layerId":"data.region"}],"layers":[{"type":"data.region","id":"data.region","dataViewId":"model00000169dec71aa0_00000000"}]},"type":"live","visId":"com.ibm.vis.rave2bundletiledmap","name":{"translationTable":{}},"properties":[{"id":"mapStyle","value":"obsidian"},{"id":"widget.legend.position","value":"top"},{"id":"contColorPalette_data.region","value":"colorPalette7"},{"id":"Mapbox.secretToken","value":"sk.eyJ1IjoiaWJtcmF2ZSIsImEiOiJjaXlrdjl6dzUwMDJlMnlwaXV3bTJtdGQ4In0.Ek4ZA_uWjmdwh9AzD-UWyg"},{"id":"Mapbox.accountName","value":"ibmrave"},{"id":"Mapbox.token","value":"pk.eyJ1IjoiaWJtcmF2ZSIsImEiOiJjaXRvZHFzdmYwM20zMnpzYmFxeHR4bTQyIn0.7rttWKsr9b1tVXpo0ZcWFw"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"fillColor":"transparent","borderColor":"transparent","localFilters":[],"showTitle":false},"model00000169dec8a6e6_00000000":{"id":"model00000169dec8a6e6_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14\"><b><span class=\"color1\">Segmentación del siniestro&nbsp;</span><span class=\"color1\">&nbsp;</span><span class=\"color1\">por provincia</span></b></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model00000169deca4de5_00000000":{"id":"model00000169deca4de5_00000000","data":{"dataViews":[{"modelRef":"model00000169deb68e5c_00000002","dataItems":[{"id":"model00000169deca8b76_00000000","itemId":"Data_siniestralidad_v1.Número_de_Siniestro","itemLabel":"Número de Siniestro"},{"id":"model00000169decd88cf_00000000","itemId":"Data_siniestralidad_v1.Modelo_Vehiculo","itemLabel":"Modelo-Vehiculo"},{"id":"model00000169decdacaf_00000000","itemId":"Data_siniestralidad_v1.Marca","itemLabel":"Marca"}],"id":"model00000169deca8b75_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169deca8b76_00000000"],"caption":"Length","id":"values"},{"name":"categories","dataItems":["model00000169decd88cf_00000000"],"dataItemSettings":[],"caption":"Bars","id":"categories"},{"name":"color","dataItems":["model00000169decdacaf_00000000"],"caption":"Color","id":"color"}]},"type":"live","visId":"com.ibm.vis.rave2bundlecolumn","name":{"translationTable":{}},"localFilters":[],"properties":[{"id":"gridLines.visible","value":true},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"valueLabels.visible","value":false},{"id":"widget.legend.position","value":"top"},{"id":"widget.legend.display","value":true},{"id":"colorPalette","value":"colorPalette5"},{"id":"contColorPalette","value":"colorPalette7"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"fillColor":"transparent","borderColor":"transparent"},"model00000169ded0be6d_00000000":{"id":"model00000169ded0be6d_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><b><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\">Top de vehículo más siniestrado</span></b></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0d56f861_00000000":{"id":"model0000016a0d56f861_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize11\">Número de siniestro</span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0d582bc8_00000000":{"id":"model0000016a0d582bc8_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize11\">Alertas de colisión</span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0d596b72_00000000":{"id":"model0000016a0d596b72_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize11\">Alertas&nbsp; generadas</span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0d97d5bc_00000000":{"id":"model0000016a0d97d5bc_00000000","data":{"dataViews":[{"modelRef":"model0000016a0d8a9e09_00000002","dataItems":[{"id":"model0000016a0d984115_00000000","itemId":"Data_siniestralidad_v2.Patrón_de_manejo","itemLabel":"Patrón de manejo"},{"id":"model0000016a0d9b6ba6_00000000","itemId":"Data_siniestralidad_v2.Estado_de_sentimiento","itemLabel":"Estado de sentimiento del conductor"},{"id":"model0000016a0d9ea4a6_00000000","itemId":"Porcentaje_de_Riesgo","itemLabel":"Porcentaje de Riesgo (%) ","aggregate":"avg"}],"id":"model0000016a0d984114_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model0000016a0d9b6ba6_00000000"],"dataItemSettings":[],"caption":"Rows","id":"categories"},{"name":"series","dataItems":["model0000016a0d984115_00000000"],"caption":"Columns","id":"series"},{"name":"color","dataItems":["model0000016a0d9ea4a6_00000000"],"caption":"Heat","id":"color"}]},"type":"live","visId":"com.ibm.vis.rave2heat","name":{"translationTable":{}},"fillColor":"transparent","borderColor":"transparent","localFilters":[],"properties":[{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"contColorPalette","value":"colorPalette7"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a0d9fd460_00000000":{"id":"model0000016a0d9fd460_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><b><font face=\"Montserrat-Regular\"><span style=\"font-size: 14px;\" class=\"color1\">Patrón de conducción del cliente siniestrado&nbsp;</span></font></b></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0dc26ed7_00000000":{"id":"model0000016a0dc26ed7_00000000","data":{"dataViews":[{"modelRef":"model0000016a0d8a9e09_00000002","dataItems":[{"id":"model0000016a0dc2ad8d_00000000","itemId":"Data_siniestralidad_v2.Legalidad","itemLabel":"Legalidad (%)","selection":[],"aggregate":"avg"},{"id":"_multiMeasuresSeries","itemId":"_multiMeasuresSeries","itemLabel":"Measures group (4)"},{"id":"model0000016a0dc7e59c_00000000","itemId":"Data_siniestralidad_v2.Segmentación","itemLabel":"Segmentación"},{"id":"model0000016a0dcdba33_00000000","itemId":"Data_siniestralidad_v2.Eficiencia","itemLabel":"Eficiencia (%)","aggregate":"avg"},{"id":"model0000016a0dcf5059_00000000","itemId":"Data_siniestralidad_v2.Número_de_Siniestro","itemLabel":"Número de Siniestro","selection":[{"operation":"keep","topBottom":{"type":"topcount","value":10}}]},{"id":"model0000016a0dd14063_00000000","itemId":"Data_siniestralidad_v2.Anticipación","itemLabel":"Anticipación (%)","aggregate":"avg"}],"id":"model0000016a0dc28c2d_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model0000016a0dc7e59c_00000000"],"dataItemSettings":[],"caption":"Bars","id":"categories","layerId":"data"},{"name":"values","dataItems":["model0000016a0dc2ad8d_00000000","model0000016a0dcdba33_00000000","model0000016a0dd14063_00000000","model0000016a0dcf5059_00000000"],"caption":"Length","id":"values","layerId":"data"},{"name":"color","dataItems":["_multiMeasuresSeries"],"caption":"Color","id":"color"}]},"type":"live","visId":"com.ibm.vis.rave2bundlecolumn","name":{"translationTable":{}},"fillColor":"transparent","borderColor":"transparent","localFilters":[],"properties":[{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"widget.legend.position","value":"top"},{"id":"colorPalette","value":"colorPalette4"},{"id":"contColorPalette","value":"colorPalette7"},{"id":"lines.smooth","value":true},{"id":"markers.visible","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a0dd57ee4_00000000":{"id":"model0000016a0dd57ee4_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><b><font face=\"Montserrat-Regular\"><span style=\"font-size: 14px;\" class=\"color1\">Indicadores&nbsp; de&nbsp; cliente&nbsp; por segmento<br></span></font></b></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a274fdcc6_00000000":{"id":"model0000016a274fdcc6_00000000","type":"image","imageLink":"http://analyticar-sbg.mybluemix.net/static/img/Analysticar.png","altText":{"translationTable":{}},"visTypeLocked":true,"name":""},"model0000016a2c922985_00000000":{"id":"model0000016a2c922985_00000000","type":"image","imageLink":"http://analyticar-sbg.mybluemix.net/static/img/Analysticar.png","altText":{"translationTable":{}},"visTypeLocked":true,"name":""}}}}).then(    function(dashboardAPI) {        console.log('Dashboard created successfully.');        window.dashboardAPI = dashboardAPI;    }).catch(    function(err) {        console.log(err);    });
+    }
+    $(document).ready( function() {
+      prueba();
+    });
+
+
+    function getNewAPIScript() {
+      return '' +
+        'window.api = new CognosApi({' +
+        '<br>' + tab + 'cognosRootURL: \'' + "https://dde-us-south.analytics.ibm.com" + '/daas/\',' +
+        '<br>' + tab + 'sessionCode: \'' + (sessionObj ? sessionObj.sessionCode : '{{sessionCode}}') + '\',' +
+        '<br>' + tab + 'language: \'' + 'en' + '\',' +
+        '<br>' + tab + 'node: document.getElementById(\'containerDivId\')' +
+        '<br>' + '});' +
+        '<br>' + 'window.api.initialize().then(function() {' +
+        '<br>' + tab + 'console.log(\'API created successfully.\');' +
+        '<br>}, function(err) {' +
+        '<br>' + tab + 'console.log(\'Failed to create API. \' + err.message);' +
+        '<br>});';
+    }
+
+    function getOnErrorScript() {
+      return 'window.onError = function(event) {' +
+        '<br>' + tab + 'console.log(\'onError:\' + JSON.stringify(event));' +
+        '<br>' + '};' +
+        '<br>' + 'window.api.on(CognosApi.EVENTS.REQUEST_ERROR, window.onError);';
+    }
+
+    function getOffErrorScript() {
+      return 'window.api.off(CognosApi.EVENTS.REQUEST_ERROR, window.onError);';
+    }
+
+    function getCloseAPIScript() {
+      return '' +
+        'window.api.close().then(function() {' +
+        '<br>' + tab + 'console.log(\'API closed successfully.\')' +
+        '<br>});';
+
+    }
+
+    function getUpdateModuleDefinitionsScript() {
+      return '' +
+        '/* Clone our test spec since we don\'t want this example to change it */' +
+        '<br>' + 'var dbSpec = JSON.parse(JSON.stringify(sampleSpec));' +
+        '<br>' +
+        '<br>' + 'var getNewModulesCallback = function(ids) {' +
+        '<br>' + tab + 'var newModules = [];' +
+        '<br>' + tab + 'ids.forEach(function(id) {' +
+        '<br>' + tab + tab + 'newModules.push({' +
+        '<br>' + tab + tab + tab + 'id: id,' +
+        '<br>' + tab + tab + tab + 'module: {' +
+        '<br>' + tab + tab + tab + tab + 'newModuleDefinition: true' +
+        '<br>' + tab + tab + tab + '},' +
+        '<br>' + tab + tab + tab + 'name: \'newModuleName\',' +
+        '<br>' + tab + tab + '});' +
+        '<br>' + tab + '});' +
+        '<br>' + tab + 'return Promise.resolve(newModules);' +
+        '<br>' + '};  ' +
+        '<br>' +
+        '<br>' + '/* Log the before */' +
+        '<br>' + 'console.log(dbSpec.dataSources.sources);' +
+        '<br>' +
+        '<br>' + 'window.api.updateModuleDefinitions(dbSpec, getNewModulesCallback).then(function(newDBSpec) {' +
+        '<br>' + tab + 'console.log(newDBSpec.dataSources.sources);' +
+        '<br>' + '});';
+    }
+
+    function getNewDashboardScript() {
+      return 'window.api.dashboard.createNew().then(' +
+        '<br>' + tab + 'function(dashboardAPI) {' +
+        '<br>' + tab + tab + 'console.log(\'Dashboard created successfully.\');' +
+        '<br>' + tab + tab + 'window.dashboardAPI = dashboardAPI;' +
+        '<br>' + tab + '}' +
+        '<br>' + ').catch(' +
+        '<br>' + tab + 'function(err) {' +
+        '<br>' + tab + tab + 'console.log(\'User hit cancel on the template picker page.\');' +
+        '<br>' + tab + '}' +
+        '<br>);'
+    }
+
+
+    function getOpenDashboardScript() {
+      return 'window.api.dashboard.openDashboard({' +
+        '<br>' + tab + 'dashboardSpec: sampleSpec' +
+        '<br>}).then(' +
+        '<br>' + tab + 'function(dashboardAPI) {' +
+        '<br>' + tab + tab + 'console.log(\'Dashboard created successfully.\');' +
+        '<br>' + tab + tab + 'window.dashboardAPI = dashboardAPI;' +
+        '<br>' + tab + '}' +
+        '<br>' + ').catch(' +
+        '<br>' + tab + 'function(err) {' +
+        '<br>' + tab + tab + 'console.log(err);' +
+        '<br>' + tab + '}' +
+        '<br>);'
+    }
+
+
+    function getAddSourcesScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleBikeShareRidesDemographModule,' +
+        '<br>' + tab + 'name: \'Data_siniestralidad_v1\',' +
+        '<br>' + tab + 'id: \'myUniqueId222\'' +
+        '<br>}])';
+    }
+
+    function getAddSampleScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleBike,' +
+        '<br>' + tab + 'name: \'Data_siniestralidad_v2\',' +
+        '<br>' + tab + 'id: \'myUniqueId223\'' +
+        '<br>}])';
+    }
+
+    function getAddDemographModuleScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: DemographModule,' +
+        '<br>' + tab + 'name: \'Data_siniestralidad_v3\',' +
+        '<br>' + tab + 'id: \'myUniqueId224\'' +
+        '<br>}])';
+    }
+
+    function getAddProtectedSourcesScript() {
+      return '' +
+        'var protectedSampleModule = getProtectedSampleModule();' +
+        '<br>' + 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: protectedSampleModule,' +
+        '<br>' + tab + 'name: \'Protected Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId456\'' +
+        '<br>' + '}])';
+    }
+
+    function getAddCSVSourcesScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleCSVModule,' +
+        '<br>' + tab + 'name: \'Test CSV Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId789\'' +
+        '<br>}])';
+    }
+
+    function getAddProtectedCSVSourcesScript() {
+      return '' +
+        'var protectedSampleModule = getProtectedSampleCSVModule();' +
+        '<br>' + 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: protectedSampleModule,' +
+        '<br>' + tab + 'name: \'Protected CSV Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId987\'' +
+        '<br>' + '}]);';
+    }
+
+    function getSetModeScript() {
+      return '/**' +
+        '<br>Available modes' +
+        '<br>dashboardAPI.MODES.EDIT (authoring mode)' +
+        '<br>dashboardAPI.MODES.VIEW (consumption mode)' +
+        '<br>dashboardAPI.MODES.EDIT_GROUP (event group mode)' +
+        '<br>*/' +
+        '<br><br>dashboardAPI.setMode(dashboardAPI.MODES.EDIT);';
+    }
+
+    function getUndoScript() {
+      return 'dashboardAPI.undo();';
+    }
+
+    function getRedoScript() {
+      return 'dashboardAPI.redo();';
+    }
+
+    function getGetSpecScript() {
+      return 'dashboardAPI.getSpec().then(function(spec){' +
+        '<br>' + tab + 'console.log(JSON.stringify(spec));' +
+        '<br>' + '});';
+    }
+
+    function getClearDirtyScript() {
+      return 'dashboardAPI.clearDirty();';
+    }
+
+    function getTogglePropertiesScript() {
+      return 'dashboardAPI.toggleProperties();';
+    }
+
+    function getOnEventScript() {
+      return 'window.onDirty = function(event) {' +
+        '<br>' + tab + 'console.log(\'onDirty:\' + JSON.stringify(event));' +
+        '<br>' + '};' +
+        '<br>' + 'dashboardAPI.on(dashboardAPI.EVENTS.DIRTY, window.onDirty);';
+    }
+
+    function getOffEventScript() {
+      return 'dashboardAPI.off(dashboardAPI.EVENTS.DIRTY, window.onDirty);';
+    }
+
+    function setActionScript() {
+      var selectedValue = document.getElementById('action').value;
+      var fn = window['get' + selectedValue + 'Script'];
+      var script = fn();
+      document.getElementById('actionScript').innerHTML = script;
+      console.log(selectedValue)
+      console.log(fn)
+    }
+
+    function _createSession(client_id, client_secret, payload) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "v1/session", true);
+      xhttp.setRequestHeader('Authorization', 'Basic ' + btoa(client_id + ':' + client_secret));
+      xhttp.setRequestHeader('Content-Type', 'application/json');
+
+      return new Promise(function(resolve, reject) {
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 201) {
+              resolve(JSON.parse(this.responseText));
+            } else {
+              reject(new Error(this.statusText));
+            }
+          }
+        };
+        xhttp.send(JSON.stringify(payload));
+      });
+    }
+
+    function getProtectedSampleModule() {
+      return this._encryptModuleInfo(sampleModule);
+    }
+
+    function getProtectedSampleCSVModule() {
+      return this._encryptModuleInfo(sampleCSVModule);
+    }
+
+    function _encryptModuleInfo(module) {
+      var sampleProtectedModule = JSON.parse(JSON.stringify(module));
+      return this._encryptObject(sampleProtectedModule);
+    }
+
+    function _encryptObject(obj, name) {
+      Object.keys(obj).forEach(function(key) {
+        var fullKey = name ? name + '.' + key : key;
+        if (typeof obj[key] === 'object') {
+          // encrypt the child object
+          this._encryptObject(obj[key], fullKey);
+        } else if (validPropertiesToEncrypt.indexOf(fullKey) !== -1) {
+          obj[key] = this._encryptValue(obj[key]);
+        }
+      });
+      return obj;
+    }
+
+    function _encryptValue(value) {
+      var keyObj = KEYUTIL.getKey(sessionObj.keys[0]);
+      var hex = KJUR.crypto.Cipher.encrypt(value, keyObj);
+
+      return '{enc}' + hextob64(hex);
+    }
+
+    function deleteSession(client_id, client_secret) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("DELETE", "v1/session", true);
+      xhttp.setRequestHeader('Authorization', 'Basic ' + btoa(client_id + ':' + client_secret));
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            resolve(JSON.parse(this.responseText));
+          } else {
+            reject();
+          }
+        }
+      };
+      xhttp.send();
+    }
+
+    function newSession(username, password, payload) {
+      var containerDiv = document.getElementById('containerDivId');
+
+      _createSession(username, password, payload).then(function(session) {
+        sessionObj = session;
+
+        window.onbeforeunload = function() {
+          deleteSession(username, password);
+        }
+        containerDiv.innerHTML = '<h2>Session information</h2><pre>' + JSON.stringify(sessionObj, undefined, 4) + '</pre>';
+      }, function(err) {
+        sessionObj = null;
+        containerDiv.innerHTML = '<h2>Failed to create session</h2>Please check your application credentials.';
+      });
+    }
+  </script>
+
+  <style>
+
+    option:disabled {
+      color: #00669E;
+      font-weight: bolder;
+    }
+
+    .leftPanel {
+      height: 100%;
+      width: 400px;
+      background-color: #d0d2d3;
+      float: left;
+      position: relative;
+      box-shadow: 5px 5px 10px #264A60;
+      border: 2px solid #3C4646;
+      margin: 2px 10px 2px 2px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .leftPanel>div {
+      padding: 10px;
+    }
+
+    .select {
+      color: #3D4852;
+      font-weight: bold;
+    }
+
+    .select>select {
+      width: 100%;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border: 2px solid #264A60;
+      font-size: 14px;
+      padding: 2px;
+    }
+
+    .input {
+      font-size: 12px;
+      font-family: monospace;
+      height: 100%;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border: 2px solid #264A60;
+      background-color: white;
+      margin: 10px;
+      overflow-y: auto;
+    }
+
+    .group {
+      padding: 10px;
+    }
+
+    .button {
+      background-color: #00669E;
+      color: white;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      bottom: 10px;
+      right: 10px;
+      box-shadow: 3px 3px 10px #264A60;
+      cursor: hand;
+      border-radius: 10px;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      border: 2px solid #264A60;
+      float: right;
+    }
+
+.iframeContainer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .iframeContainer pre {
+      display: flex;
+      font-size: medium;
+      white-space: pre-wrap;
+    }
+  </style>
+
+
+  <main class="main-content" style="width:100%;height:100% !important">
+  
+  <div class="container">
+
+  <body onload="setActionScript();" >
+<!--   <div class="leftPanel">
+    <div class="select">
+      <select id="action" onchange="setActionScript()">
+        <option disabled>API Framework</option>
+        <option value="NewSession" select='true'>Create a session for the API</option>
+        <option value="NewAPI">Create and initialize the API framework</option>
+        <option value="OnError">Register a callback to handle API events</options>
+        <option value="OffError">Unregister a API event callback</options>
+        <option value="CloseAPI">Close the API framework</option>
+        <option value="UpdateModuleDefinitions">Update module definitions</option>
+        <option disabled></option>
+        <option disabled>Invoke DashboardFactory</option>
+        <option value="NewDashboard">Create new dashboard</option>
+        <option value="OpenDashboard">Open dashboard</option>
+        <option disabled></option>
+        <option disabled>Invoke DashboardAPI</option>
+        <option value="AddSources">Add sources to dashboard</option>
+        <option value="AddSample">Add sources to parte 2</option>
+        <option value="AddDemographModule">Add siniestralidad to parte 3</option>
+        <option value="AddProtectedSources">Add protected sample source</option>
+        <option value="AddCSVSources">Add sample CSV source</option>
+        <option value="AddProtectedCSVSources">Add protected sample CSV source</option>
+        <option value="SetMode">Set dashboard mode</option>
+        <option value="Undo">Undo the last action</option>
+        <option value="Redo">Redo the last undone action</option>
+        <option value="GetSpec">Get the dashboard spec</option>
+        <option value="ClearDirty">Clear the dashboard dirty state</option>
+        <option value="ToggleProperties">Toggle the properties pane</option>
+        <option value="OnEvent">Register a callback to handle dashboard events</option>
+        <option value="OffEvent">Unregister a event callback</option>
+      </select>
+    </div>
+    <div class="input" contenteditable="true" id="actionScript">
+    </div>
+    <div>
+      <button type="submit" class="button" onclick="execute()">Execute</button>
+    </div>
+  </div> -->
+  
+</body>
+  </div>
+
+<div class="" style="height:1050px;">
+  <div class="iframeContainer" id="containerDivId"></div>
+</div>
+
+</main>
+
+{% endblock content %}

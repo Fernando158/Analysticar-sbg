@@ -1,0 +1,95 @@
+Cliente,Numeros_de_Alertas_emergencia,Tiempo_reporte_siniestro,Número_parte_afectadas_colisión,Provincia,Ciudad,Tipo_de_siniestro,Estado_de_sentimiento,Números_de_Alertas_tempranas,detección_de_alerta,Patrón_de_manejo,Número_de_Siniestro,sexo,edad,Modelo_Vehiculo,Marca,color
+Fernando Salas,1,10,1,Pichincha,Quito,Siniestro Parcial,Ira,3,Posible colisión,Riesgoso,1,masculino,25,Aveo,GM,negro
+Gustavo López ,1,40,2,Guayas,Guayaquil,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,34,Spark,GM,blanco
+Maria Molina,0,12,3,Imbabura,Imbarra,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,femenino,41,Getz,Hyundai,plata
+Jairo Jimenez,1,8,2,Guayas,Guayaquil,Siniestro Parcial,Felicidad,3,Posible colisión,Riesgoso,1,masculino,31,Accent,Hyundai,rojo
+Daniel Macias,1,18,2,Pichincha,Quito,Siniestro Parcial,Normal,3,Posible colisión,Riesgoso,1,masculino,28,Terios,Toyota,azul
+ Elena Chacon ,1,40,1,Santa Elena,Santa Elena,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,femenino,35,Fiesta,Ford,negro
+Carlos Paredes ,0,22,2,Imbabura,Imbarra,Siniestro Parcial,Ira,2,Frenado brusco,Riesgoso,1,masculino,55,Gol,Volkswagen,azul
+Mario Solis ,1,12,1,Pichincha,Quito,Siniestro Parcial,Normal,1,Posible colisión,Moderado,1,masculino,61,Civic,Honda,blanco
+Valentina Carvache,0,35,3,Imbabura,Imbarra,Siniestro Total,Felicidad,2,Frenado brusco,Riesgoso,1,femenino,56,Tucson,Hyundai,rojo
+Alberto Matos ,0,34,3,Esmeraldas,Esmeraldas,Siniestro Parcial,Ira,2,Frenado brusco,Normal,1,masculino,48,Jetta,Volkswagen,blanco
+Angelica Robles,1,24,1,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,36,Spark,GM,plata
+Javier Molina ,0,43,2,Pichincha,Quito,Siniestro Total,Felicidad,2,Frenado brusco,Riesgoso,1,masculino,33,Civic,Honda,rojo
+Mercy Masache  ,1,70,1,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,femenino,28,Gol,Volkswagen,negro
+Manuel Moa ,0,8,3,Guayas,Guayaquil,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,32,Fiesta,Ford,azul
+Enrique Roldan,0,18,2,Pichincha,Quito,Siniestro Total,Felicidad,2,Frenado brusco,Riesgoso,1,masculino,27,Aveo,GM,rojo
+Karina Velazco ,0,12,2,Esmeraldas,Esmeraldas,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,femenino,35,Aveo,GM,negro
+David Garnica  ,1,8,1,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,37,Tucson,Hyundai,plata
+Xavier  Alfonso ,1,22,1,Pichincha,Quito,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,44,Getz,Hyundai,rojo
+ Jose Diaz,0,12,1,Esmeraldas,Esmeraldas,Siniestro Parcial,Ira,2,Frenado brusco,Riesgoso,1,masculino,37,Accent,Hyundai,negro
+Carlos Maldonado,1,8,1,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,33,Civic,Honda,negro
+Alfredo Dominguez ,0,18,2,Guayas,Guayaquil,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,28,Gol,Volkswagen,blanco
+Jose  Zavala,1,40,1,Guayas,Guayaquil,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,32,Civic,Honda,negro
+Javier Hermenegildo ,1,22,3,Santa Elena,Santa Elena,Siniestro Parcial,Ira,3,Posible colisión,Riesgoso,1,masculino,27,Tucson,Hyundai,azul
+Ivan Vazcone el pozo,1,12,3,Pichincha,Quito,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,35,Jetta,Volkswagen,negro
+Hernandez Mujica,0,24,2,Guayas,Guayaquil,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,37,Spark,GM,azul
+Ernesto Perez,0,43,2,Imbabura,Imbarra,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,44,Jetta,Volkswagen,blanco
+Ramiro Robles,0,70,1,Esmeraldas,Esmeraldas,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,37,Aveo,GM,rojo
+Elizabeth Chicaiza,1,8,1,Santa Elena,Santa Elena,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,femenino,25,Spark,GM,blanco
+Angel Castro,1,24,1,Santa Elena,Santa Elena,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,masculino,34,Getz,Hyundai,negro
+Alexandra Sornoza,0,23,2,Guayas,Guayaquil,Siniestro Total,Felicidad,2,Frenado brusco,Riesgoso,1,masculino,33,Accent,Hyundai,azul
+Gabriela Sandoval,0,8,1,Imbabura,Imbarra,Siniestro Parcial,Ira,2,Frenado brusco,Normal,1,femenino,33,Terios,Toyota,rojo
+Patricio Caviedez,0,22,3,Esmeraldas,Esmeraldas,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,28,Civic,Honda,negro
+Rodrigo Chillogalli ,1,48,3,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,32,Gol,Volkswagen,plata
+Mariana Muñoz ,1,81,3,Pichincha,Quito,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,femenino,27,Civic,Honda,rojo
+Luis  Moreira,0,40,1,Guayas,Guayaquil,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,35,Tucson,Hyundai,blanco
+Marlon Cepeda,0,12,2,Imbabura,Imbarra,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,37,Jetta,Volkswagen,rojo
+Cristina Peñaranda ,1,8,3,Santa Elena,Santa Elena,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,femenino,44,Spark,GM,negro
+Marcela de jesus Ochoa,1,18,1,Esmeraldas,Esmeraldas,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,femenino,37,Civic,Honda,blanco
+Carolina Velecela,1,35,2,Santa Elena,Santa Elena,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,femenino,26,Aveo,GM,blanco
+Mariana Molina,0,34,1,Pichincha,Quito,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,femenino,32,Spark,GM,rojo
+Pedro Gaibor,1,24,2,Guayas,Guayaquil,Siniestro Total,Tristesa,4,Posible colisión,Normal,1,masculino,35,Getz,Hyundai,negro
+Eduardo Robles,1,43,2,Imbabura,Imbarra,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,masculino,37,Accent,Hyundai,azul
+Santiago Jara,1,35,1,Pichincha,Quito,Siniestro Parcial,Felicidad,1,Posible colisión,Moderado,1,masculino,22,Terios,Toyota,rojo
+Jesus Minchala,0,34,3,Guayas,Guayaquil,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,42,Civic,Honda,negro
+Manuel Lojano,0,24,1,Esmeraldas,Esmeraldas,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,35,Jetta,Volkswagen,plata
+Paul Chamba,0,43,2,Santa Elena,Santa Elena,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,37,Jetta,Volkswagen,rojo
+Rocio Prieto,1,24,2,Pastaza,Puyo,Siniestro Parcial,Ira,3,Posible colisión,Moderado,1,femenino,31,Accent,Hyundai,rojo
+Cecibel Prieto,1,23,1,Loja,Loja,Siniestro Parcial,Tristesa,3,Posible colisión,Riesgoso,1,femenino,28,Terios,Toyota,azul
+Hualpa Yadira,0,8,1,Manabí,Portoviejo,Siniestro Parcial,Normal,1,Frenado brusco,Moderado,1,femenino,35,Fiesta,Ford,negro
+Heriberto Flores,1,22,2,Napo,Tena,Siniestro Parcial,Felicidad,2,Posible colisión,Riesgoso,1,masculino,55,Gol,Volkswagen,azul
+Jaime Vitere,1,48,2,Sucumbíos,Nueva Loja,Siniestro Parcial,Normal,1,Posible colisión,Normal,1,masculino,61,Civic,Honda,blanco
+Narcisa Morales,1,81,1,Azuay,Cuenca,Siniestro Total,Felicidad,2,Posible colisión,Normal,1,femenino,56,Tucson,Hyundai,rojo
+Alfonso HERMENEGILDO ,0,22,2,El Oro,Machala,Siniestro Total,Ira,2,Frenado brusco,Moderado,1,masculino,48,Jetta,Volkswagen,blanco
+Juliana Pilligua ,1,12,1,Napo,Tena,Siniestro Parcial,Normal,4,Posible colisión,Moderado,1,femenino,37,Jetta,Volkswagen,rojo
+Joselyn Carvache,0,24,3,Napo,Tena,Siniestro Parcial,Felicidad,2,Frenado brusco,Moderado,1,femenino,44,Spark,GM,negro
+Maite Chiriboga,0,43,3,Pastaza,Puyo,Siniestro Parcial,Felicidad,4,Frenado brusco,Moderado,1,femenino,37,Civic,Honda,blanco
+Ana Sagva,1,24,1,Loja,Loja,Siniestro Parcial,Felicidad,3,Posible colisión,Moderado,1,femenino,26,Aveo,GM,blanco
+Santiago Mozo,0,43,2,Manabí,Portoviejo,Siniestro Parcial,Tristesa,3,Frenado brusco,Riesgoso,1,masculino,32,Spark,GM,rojo
+Maria Remache  ,1,70,1,Manabí,Portoviejo,Siniestro Parcial,Normal,1,Posible colisión,Riesgoso,1,femenino,35,Getz,Hyundai,negro
+Erika Ushigua,0,24,3,Napo,Tena,Siniestro Parcial,Tristesa,2,Frenado brusco,Riesgoso,1,femenino,37,Accent,Hyundai,azul
+Xavier  HerdoIizavilllaba,1,23,2,Manabí,Portoviejo,Siniestro Parcial,Felicidad,1,Frenado brusco,Riesgoso,1,masculino,22,Terios,Toyota,rojo
+Maria Lituma  ,0,8,2,Napo,Tena,Siniestro Parcial,Felicidad,2,Frenado brusco,Moderado,1,femenino,33,Civic,Honda,negro
+Lucrecia Espinoza ,1,22,1,Sucumbíos,Nueva Loja,Siniestro Total,Normal,2,Frenado brusco,Riesgoso,1,masculino,28,Gol,Volkswagen,blanco
+Yadira Armendariz ,0,48,1,Azuay,Cuenca,Siniestro Total,Ira,4,Frenado brusco,Normal,1,femenino,32,Civic,Honda,negro
+Ricardo Paredes ,0,81,1,El Oro,Machala,Siniestro Parcial,Tristesa,2,Frenado brusco,Normal,1,masculino,27,Tucson,Hyundai,azul
+Elena LUQUE ,0,8,1,El Oro,Machala,Siniestro Parcial,Normal,4,Frenado brusco,Normal,1,femenino,35,Jetta,Volkswagen,negro
+Roldan Patriciochicaiza,0,18,2,Pastaza,Puyo,Siniestro Parcial,Normal,3,Frenado brusco,Normal,1,masculino,25,Aveo,GM,negro
+Lorenzo Canton,0,40,1,Loja,Loja,Siniestro Parcial,Normal,3,Frenado brusco,Normal,1,masculino,34,Spark,GM,blanco
+Guillermina  Huatatoca ,0,22,2,Manabí,Portoviejo,Siniestro Parcial,Normal,1,Frenado brusco,Normal,1,masculino,41,Getz,Hyundai,plata
+Lorenzo Montero,0,12,1,Napo,Tena,Siniestro Total,Tristesa,2,Frenado brusco,Moderado,1,masculino,31,Accent,Hyundai,rojo
+Lidia Mero,0,24,1,Sucumbíos,Nueva Loja,Siniestro Parcial,Tristesa,1,Frenado brusco,Moderado,1,femenino,32,Civic,Honda,negro
+Sebastian Arteaga,0,43,2,Azuay,Cuenca,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,masculino,32,Civic,Honda,negro
+Lorenzo  Espinal,1,70,1,El Oro,Machala,Siniestro Parcial,Normal,2,Posible colisión,Moderado,1,masculino,32,Civic,Honda,negro
+Alberto Matos,1,8,1,Sucumbíos,Nueva Loja,Siniestro Parcial,Felicidad,4,Posible colisión,Riesgoso,1,masculino,32,Civic,Honda,negro
+Yusmile  Pedrosa ,0,24,1,Azuay,Cuenca,Siniestro Parcial,Normal,2,Frenado brusco,Moderado,1,femenino,25,Aveo,GM,negro
+Carlos Guagua ,1,23,2,El Oro,Machala,Siniestro Total,Felicidad,4,Posible colisión,Riesgoso,1,masculino,34,Spark,GM,blanco
+Fanny Caiza,1,8,1,Pastaza,Puyo,Siniestro Total,Ira,1,Posible colisión,Normal,1,femenino,41,Getz,Hyundai,plata
+Juan Villalva,1,22,1,Loja,Loja,Siniestro Parcial,Normal,2,Posible colisión,Normal,1,masculino,31,Accent,Hyundai,rojo
+Franklin Contreras,0,48,3,Manabí,Portoviejo,Siniestro Parcial,Ira,1,Frenado brusco,Riesgoso,1,masculino,32,Civic,Honda,negro
+Mirian Guaman,1,22,3,Pastaza,Puyo,Siniestro Parcial,Normal,1,Posible colisión,Riesgoso,1,femenino,32,Civic,Honda,negro
+Patricio Vega,0,12,1,Pastaza,Puyo,Siniestro Parcial,Felicidad,1,Frenado brusco,Moderado,1,masculino,33,Civic,Honda,negro
+Reyes Oñate,0,24,2,Loja,Loja,Siniestro Parcial,Ira,2,Frenado brusco,Riesgoso,1,masculino,28,Gol,Volkswagen,blanco
+Wilmer  Shagñay,1,8,3,El Oro,Machala,Siniestro Total,Ira,1,Posible colisión,Normal,1,masculino,32,Civic,Honda,negro
+Elizabeth Villacrez,0,18,1,Sucumbíos,Nueva Loja,Siniestro Total,Normal,1,Frenado brusco,Normal,1,femenino,27,Tucson,Hyundai,azul
+Lorenzo Monserrate ,1,12,2,Azuay,Cuenca,Siniestro Total,Felicidad,3,Posible colisión,Moderado,1,masculino,35,Jetta,Volkswagen,negro
+Anita Guerrero ,0,34,1,El Oro,Machala,Siniestro Parcial,Ira,3,Frenado brusco,Moderado,1,femenino,25,Aveo,GM,negro
+Brian Gonzabay,0,24,2,Pastaza,Puyo,Siniestro Parcial,Ira,1,Frenado brusco,Moderado,1,masculino,34,Spark,GM,blanco
+Mario Buño ,1,22,1,Loja,Loja,Siniestro Parcial,Normal,2,Posible colisión,Moderado,1,masculino,41,Getz,Hyundai,plata
+Angelica Robles,1,12,1,Manabí,Portoviejo,Siniestro Parcial,Felicidad,1,Posible colisión,Riesgoso,1,femenino,31,Accent,Hyundai,rojo
+Oswaldo Chiliquinga ,1,24,1,Napo,Tena,Siniestro Parcial,Ira,2,Posible colisión,Moderado,1,masculino,32,Civic,Honda,negro
+Juan Sisalima ,0,43,1,Sucumbíos,Nueva Loja,Siniestro Total,Normal,2,Frenado brusco,Riesgoso,1,masculino,33,Civic,Honda,negro
+Juan Guanbo ,0,43,2,Sucumbíos,Nueva Loja,Siniestro Total,Normal,4,Frenado brusco,Normal,1,masculino,28,Gol,Volkswagen,blanco
+Miguel Montero  ,0,24,2,Azuay,Cuenca,Siniestro Total,Normal,2,Frenado brusco,Normal,1,masculino,32,Civic,Honda,negro
+José Lagla,0,43,2,El Oro,Machala,Siniestro Total,Normal,4,Frenado brusco,Riesgoso,1,masculino,27,Tucson,Hyundai,azul

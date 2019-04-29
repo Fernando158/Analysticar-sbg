@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from . import settings
+from analysticar import views
+from django.conf.urls.static import static
+# from analysticar_django.settings import MEDIA_URL, MEDIA_ROOT
+# from analysticar.ajax import get_urbanizacion,get_taller,get_ciudad
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name="home"),
-    url(r'^old$', views.homeOld, name="homeOld"),
     url(r'^iniciar-sesion/$', views.iniciarSesion, name="iniciarSesion"),
     url(r'^cerrar-sesion/$', views.cerrarSesion, name="cerrarSesion"),
     url(r'^registrar-usuario/$', views.registrarUsuario, name="registrarUsuario"),
@@ -27,4 +30,4 @@ urlpatterns = [
     url(r'^patrones', views.patrones, name="patrones"),
     url(r'^siniestralidad', views.siniestralidad, name="siniestralidad"),
     url(r'^alertas$', views.alertas, name="alertas"),
-] + static(MEDIA_URL, document_root=MEDIA_ROOT)
+]

@@ -1,0 +1,139 @@
+Cliente,Fecha,Provincia,Ciudad,Sexo,Edad,Transporte-autobus,Transporte-bicicleta,Transporte-caminando,Transporte-vehiculo,Porcentaje_tráfico_vehicular,Riesgo
+Fernando Salas,02/01/2018,Guayas,Guayaquil,masculino,25,10,3,52,35,63,30
+Gustavo López ,03/01/2018,Guayas,Guayaquil,masculino,34,15,5,55,25,40,15
+Maria Molina,04/01/2018,Imbabura,Imbarra,femenino,41,3,15,64,18,36,21
+Jairo Jimenez,05/01/2018,Pichincha,Quito,masculino,31,5,10,55,30,72,50
+Daniel Macias,06/01/2018,Imbabura,Imbarra,masculino,28,6,25,35,35,38,30
+ Elena Chacon ,07/01/2018,Esmeraldas,Esmeraldas,femenino,35,0,2,70,28,20,18
+Carlos Paredes ,02/01/2018,Guayas,Guayaquil,masculino,55,8,0,63,29,54,49
+Mario Solis ,03/01/2018,Santa Elena,Santa Elena,masculino,61,4,0,37,59,52,70
+Valentina Carvache,04/01/2018,Esmeraldas,Esmeraldas,femenino,56,6,25,35,35,47,39
+Alberto Matos ,05/01/2018,Pichincha,Quito,masculino,48,8,0,24,68,70,24
+Angelica Robles,06/01/2018,Imbabura,Imbarra,masculino,36,30,0,36,34,40,30
+Javier Molina ,07/01/2018,Esmeraldas,Esmeraldas,masculino,33,2,2,25,71,72,20
+Mercy Masache  ,02/01/2018,Imbabura,Imbarra,femenino,28,3,15,64,18,38,34
+Manuel Moa ,03/01/2018,Pichincha,Quito,masculino,32,5,10,55,30,20,20
+Enrique Roldan,04/01/2018,Pichincha,Quito,masculino,27,6,25,35,35,15,25
+Karina Velazco ,05/01/2018,Santa Elena,Santa Elena,femenino,35,6,25,35,35,63,40
+David Garnica  ,06/01/2018,Imbabura,Imbarra,masculino,37,10,3,52,35,38,46
+Xavier  Alfonso ,04/01/2018,Pichincha,Quito,masculino,44,15,5,55,25,20,42
+Jose Diaz,05/01/2018,Imbabura,Imbarra,masculino,37,6,25,35,35,63,34
+Carlos Maldonado,05/01/2018,Imbabura,Imbarra,masculino,33,10,3,52,35,63,30
+Alfredo Dominguez ,06/01/2018,Pichincha,Quito,masculino,28,15,5,55,25,40,15
+Jose  Zavala,04/01/2018,Santa Elena,Santa Elena,masculino,32,3,15,64,18,36,21
+Javier Hermenegildo ,05/01/2018,Santa Elena,Santa Elena,masculino,27,10,3,52,35,38,46
+Ivan Vazcone el pozo,06/01/2018,Imbabura,Imbarra,masculino,35,30,0,36,34,40,30
+Hernandez Mujica,07/01/2018,Imbabura,Imbarra,masculino,37,2,2,25,71,72,20
+Ernesto Perez,02/01/2018,Esmeraldas,Esmeraldas,masculino,44,10,3,52,35,38,46
+Ramiro Robles,03/01/2018,Esmeraldas,Esmeraldas,masculino,37,5,10,55,30,72,50
+Elizabeth Chicaiza,02/01/2018,Pichincha,Quito,femenino,25,6,25,35,35,38,30
+Angel Castro,02/01/2018,Santa Elena,Santa Elena,masculino,34,0,2,70,28,20,18
+Alexandra Sornoza,02/01/2018,Esmeraldas,Esmeraldas,masculino,33,8,0,63,29,54,49
+Gabriela Sandoval,03/01/2018,Imbabura,Imbarra,femenino,33,2,2,25,71,72,20
+Patricio Caviedez,04/01/2018,Guayas,Guayaquil,masculino,28,2,2,25,71,72,20
+Rodrigo Chillogalli ,05/01/2018,Imbabura,Imbarra,masculino,32,10,3,52,35,63,30
+Mariana Muñoz ,06/01/2018,Pichincha,Quito,femenino,27,15,5,55,25,40,15
+Luis  Moreira,06/01/2018,Imbabura,Imbarra,masculino,35,3,15,64,18,36,21
+Marlon Cepeda,07/01/2018,Santa Elena,Santa Elena,masculino,37,2,2,25,71,72,20
+Cristina Peñaranda ,02/01/2018,Esmeraldas,Esmeraldas,femenino,44,3,15,64,18,38,34
+Marcela de jesus Ochoa,06/01/2018,Pichincha,Quito,femenino,37,5,10,55,30,20,20
+Carolina Velecela,07/01/2018,Guayas,Guayaquil,femenino,26,30,0,36,34,40,30
+Mariana Molina,02/01/2018,Santa Elena,Santa Elena,femenino,32,2,2,25,71,72,20
+Pedro Gaibor,02/01/2018,Imbabura,Imbarra,masculino,35,2,2,25,71,72,20
+Eduardo Robles,06/01/2018,Pichincha,Quito,masculino,37,2,2,25,71,72,20
+Santiago Jara,07/01/2018,Guayas,Guayaquil,masculino,22,10,3,52,35,38,46
+Jesus Minchala,02/01/2018,Esmeraldas,Esmeraldas,masculino,42,10,3,52,35,63,30
+Manuel Lojano,03/01/2018,Imbabura,Imbarra,masculino,35,15,5,55,25,40,15
+Paul Chamba,03/01/2018,Pichincha,Quito,masculino,37,3,15,64,18,36,21
+Fernando Salas,02/02/2018,Guayas,Guayaquil,masculino,25,3,15,64,18,38,34
+Gustavo López ,03/02/2018,Guayas,Guayaquil,masculino,34,5,10,55,30,20,20
+Maria Molina,04/02/2018,Imbabura,Imbarra,femenino,41,30,0,36,34,40,30
+Jairo Jimenez,05/02/2018,Pichincha,Quito,masculino,31,2,2,25,71,72,20
+Daniel Macias,06/02/2018,Imbabura,Imbarra,masculino,28,6,25,35,35,38,30
+ Elena Chacon ,07/02/2018,Esmeraldas,Esmeraldas,femenino,35,0,2,70,28,20,18
+Carlos Paredes ,02/02/2018,Guayas,Guayaquil,masculino,55,8,0,63,29,54,49
+Mario Solis ,03/02/2018,Santa Elena,Santa Elena,masculino,61,30,0,36,34,40,30
+Valentina Carvache,04/02/2018,Esmeraldas,Esmeraldas,femenino,56,2,2,25,71,72,20
+Alberto Matos ,05/02/2018,Pichincha,Quito,masculino,48,10,3,52,35,38,46
+Angelica Robles,06/02/2018,Imbabura,Imbarra,masculino,36,5,10,55,30,72,50
+Javier Molina ,07/02/2018,Esmeraldas,Esmeraldas,masculino,33,6,25,35,35,38,30
+Mercy Masache  ,02/02/2018,Imbabura,Imbarra,femenino,28,3,15,64,18,38,34
+Manuel Moa ,03/02/2018,Pichincha,Quito,masculino,32,5,10,55,30,20,20
+Enrique Roldan,04/02/2018,Pichincha,Quito,masculino,27,6,25,35,35,15,25
+Karina Velazco ,05/02/2018,Santa Elena,Santa Elena,femenino,35,6,25,35,35,63,40
+David Garnica  ,06/02/2018,Imbabura,Imbarra,masculino,37,10,3,52,35,38,46
+Xavier  Alfonso ,04/02/2018,Pichincha,Quito,masculino,44,15,5,55,25,20,42
+Jose Diaz,05/02/2018,Imbabura,Imbarra,masculino,37,6,25,35,35,63,34
+Carlos Maldonado,05/02/2018,Imbabura,Imbarra,masculino,33,10,3,52,35,63,30
+Alfredo Dominguez ,06/02/2018,Pichincha,Quito,masculino,28,15,5,55,25,40,15
+Jose  Zavala,04/02/2018,Santa Elena,Santa Elena,masculino,32,3,15,64,18,36,21
+Javier Hermenegildo ,05/02/2018,Santa Elena,Santa Elena,masculino,27,10,3,52,35,38,46
+Ivan Vazcone el pozo,06/02/2018,Imbabura,Imbarra,masculino,35,30,0,36,34,40,30
+Hernandez Mujica,07/02/2018,Imbabura,Imbarra,masculino,37,2,2,25,71,72,20
+Ernesto Perez,02/02/2018,Esmeraldas,Esmeraldas,masculino,44,10,3,52,35,38,46
+Ramiro Robles,03/02/2018,Esmeraldas,Esmeraldas,masculino,37,5,10,55,30,72,50
+Elizabeth Chicaiza,02/02/2018,Pichincha,Quito,femenino,25,6,25,35,35,38,30
+Angel Castro,02/02/2018,Santa Elena,Santa Elena,masculino,34,0,2,70,28,20,18
+Alexandra Sornoza,02/02/2018,Esmeraldas,Esmeraldas,masculino,33,8,0,63,29,54,49
+Gabriela Sandoval,03/02/2018,Imbabura,Imbarra,femenino,33,30,0,36,34,40,30
+Patricio Caviedez,04/02/2018,Guayas,Guayaquil,masculino,28,2,2,25,71,72,20
+Rodrigo Chillogalli ,05/02/2018,Imbabura,Imbarra,masculino,32,15,5,55,25,40,15
+Mariana Muñoz ,06/02/2018,Pichincha,Quito,femenino,27,3,15,64,18,36,21
+Luis  Moreira,06/02/2018,Imbabura,Imbarra,masculino,35,10,3,52,35,38,46
+Marlon Cepeda,07/02/2018,Santa Elena,Santa Elena,masculino,37,30,0,36,34,40,30
+Cristina Peñaranda ,02/02/2018,Esmeraldas,Esmeraldas,femenino,44,2,2,25,71,72,20
+Marcela de jesus Ochoa,06/02/2018,Pichincha,Quito,femenino,37,5,10,55,30,20,20
+Carolina Velecela,07/02/2018,Guayas,Guayaquil,femenino,26,30,0,36,34,40,30
+Mariana Molina,02/02/2018,Santa Elena,Santa Elena,femenino,32,15,5,55,25,40,15
+Pedro Gaibor,02/02/2018,Imbabura,Imbarra,masculino,35,3,15,64,18,36,21
+Eduardo Robles,06/02/2018,Pichincha,Quito,masculino,37,10,3,52,35,38,46
+Santiago Jara,07/02/2018,Guayas,Guayaquil,masculino,22,10,3,52,35,63,30
+Jesus Minchala,02/02/2018,Esmeraldas,Esmeraldas,masculino,42,10,3,52,35,63,30
+Manuel Lojano,03/02/2018,Imbabura,Imbarra,masculino,35,15,5,55,25,40,15
+Paul Chamba,03/02/2018,Pichincha,Quito,masculino,37,3,15,64,18,36,21
+Fernando Salas,03/03/2018,Guayas,Guayaquil,masculino,25,3,15,64,18,38,34
+Gustavo López ,03/03/2018,Guayas,Guayaquil,masculino,34,5,10,55,30,20,20
+Maria Molina,04/03/2018,Imbabura,Imbarra,femenino,41,30,0,36,34,40,30
+Jairo Jimenez,05/03/2018,Pichincha,Quito,masculino,31,2,2,25,71,72,20
+Daniel Macias,06/03/2018,Imbabura,Imbarra,masculino,28,6,25,35,35,38,30
+ Elena Chacon ,07/03/2018,Esmeraldas,Esmeraldas,femenino,35,0,2,70,28,20,18
+Carlos Paredes ,03/03/2018,Guayas,Guayaquil,masculino,55,8,0,63,29,54,49
+Mario Solis ,03/03/2018,Santa Elena,Santa Elena,masculino,61,0,2,70,28,20,30
+Valentina Carvache,04/03/2018,Esmeraldas,Esmeraldas,femenino,56,8,0,63,29,54,20
+Alberto Matos ,05/03/2018,Pichincha,Quito,masculino,48,30,0,36,34,40,46
+Angelica Robles,06/03/2018,Imbabura,Imbarra,masculino,36,2,2,25,71,72,50
+Javier Molina ,07/03/2018,Esmeraldas,Esmeraldas,masculino,33,15,5,55,25,40,30
+Mercy Masache  ,03/03/2018,Imbabura,Imbarra,femenino,28,3,15,64,18,36,34
+Manuel Moa ,03/03/2018,Pichincha,Quito,masculino,32,5,10,55,30,20,20
+Enrique Roldan,04/03/2018,Pichincha,Quito,masculino,27,6,25,35,35,15,25
+Karina Velazco ,05/03/2018,Santa Elena,Santa Elena,femenino,35,6,25,35,35,63,40
+David Garnica  ,06/03/2018,Imbabura,Imbarra,masculino,37,10,3,52,35,38,46
+Xavier  Alfonso ,04/03/2018,Pichincha,Quito,masculino,44,15,5,55,25,20,42
+Jose Diaz,05/03/2018,Imbabura,Imbarra,masculino,37,6,25,35,35,63,34
+Carlos Maldonado,05/03/2018,Imbabura,Imbarra,masculino,33,0,2,70,28,20,30
+Alfredo Dominguez ,06/03/2018,Pichincha,Quito,masculino,28,8,0,63,29,54,15
+Jose  Zavala,04/03/2018,Santa Elena,Santa Elena,masculino,32,30,0,36,34,40,21
+Javier Hermenegildo ,05/03/2018,Santa Elena,Santa Elena,masculino,27,2,2,25,71,72,46
+Ivan Vazcone el pozo,06/03/2018,Imbabura,Imbarra,masculino,35,15,5,55,25,40,30
+Hernandez Mujica,07/03/2018,Imbabura,Imbarra,masculino,37,2,2,25,71,72,20
+Ernesto Perez,03/03/2018,Esmeraldas,Esmeraldas,masculino,44,10,3,52,35,38,46
+Ramiro Robles,03/03/2018,Esmeraldas,Esmeraldas,masculino,37,5,10,55,30,72,50
+Elizabeth Chicaiza,03/03/2018,Pichincha,Quito,femenino,25,6,25,35,35,38,30
+Angel Castro,03/03/2018,Santa Elena,Santa Elena,masculino,34,0,2,70,28,20,18
+Alexandra Sornoza,03/03/2018,Esmeraldas,Esmeraldas,masculino,33,8,0,63,29,54,49
+Gabriela Sandoval,03/03/2018,Imbabura,Imbarra,femenino,33,30,0,36,34,40,30
+Patricio Caviedez,04/03/2018,Guayas,Guayaquil,masculino,28,0,2,70,28,20,20
+Rodrigo Chillogalli ,05/03/2018,Imbabura,Imbarra,masculino,32,8,0,63,29,54,15
+Mariana Muñoz ,06/03/2018,Pichincha,Quito,femenino,27,30,0,36,34,40,21
+Luis  Moreira,06/03/2018,Imbabura,Imbarra,masculino,35,2,2,25,71,72,46
+Marlon Cepeda,07/03/2018,Santa Elena,Santa Elena,masculino,37,15,5,55,25,40,30
+Cristina Peñaranda ,03/03/2018,Esmeraldas,Esmeraldas,femenino,44,2,2,25,71,72,20
+Marcela de jesus Ochoa,06/03/2018,Pichincha,Quito,femenino,37,5,10,55,30,20,20
+Carolina Velecela,07/03/2018,Guayas,Guayaquil,femenino,26,30,0,36,34,40,30
+Mariana Molina,03/03/2018,Santa Elena,Santa Elena,femenino,32,15,5,55,25,40,15
+Pedro Gaibor,03/03/2018,Imbabura,Imbarra,masculino,35,3,15,64,18,36,21
+Eduardo Robles,06/03/2018,Pichincha,Quito,masculino,37,10,3,52,35,38,46
+Santiago Jara,07/03/2018,Guayas,Guayaquil,masculino,22,10,3,52,35,63,30
+Jesus Minchala,03/03/2018,Esmeraldas,Esmeraldas,masculino,42,15,5,55,25,40,30
+Manuel Lojano,03/03/2018,Imbabura,Imbarra,masculino,35,3,15,64,18,36,15
+Paul Chamba,03/03/2018,Pichincha,Quito,masculino,37,3,15,64,18,36,21

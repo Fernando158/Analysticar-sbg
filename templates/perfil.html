@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/modal.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style type="text/css">
+  section{
+    margin-bottom: 50px;
+  }
+  .bordeCarro {
+    border: 2px solid #5fba7d !important; 
+  }
+</style>
+
+<div class="table-responsive col-md-10 col-sm-10 col-xs-10" style="margin-top:80px;margin-left:40px;">
+    <section id="consultarDatos">
+          <table class="table table-hover" style="text-align:center">
+              <thead>
+                <th colspan="8" style="background-color:#0f75bd; color:white">Datos del titular</th>
+              </thead>
+              <thead>
+                <th>Nombres y Apellidos</th>
+                <th>Nº de Identificación</th>
+                <th>Correo electrónico</th>
+                <th>Teléfono</th>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>{{request.user.first_name}} {{request.user.last_name}}</td>
+                    <td>{{request.user.ident}}</td>
+                    <td>{{request.user.email}}</td>
+                    <td>{{request.user.telefono}}</td>
+                  </tr>
+              </tbody>
+            </table>
+            <ul class="tab-pane" id="tab2" align="right">
+                {% if page_obj.has_previous %}
+                  <li class="btn btn-primary btnPrevious">
+                      <a href="?page={{ page_obj.previous_page_number }}">&laquo;Anterior</a>
+                  </li>
+                {% endif %}
+               {% if page_obj.has_next %}
+                    <li class="btn btn-primary btnNext">
+                      <a href="?page={{ page_obj.next_page_number }}">Siguiente&raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        <br><br>    
+        {% if carros %}
+          <table class="table table-hover" style="text-align:center">
+            <thead>
+              <th colspan="8" style="background-color:#0f75bd; color:white">Datos de pólizas</th>
+            </thead>
+            <thead>
+              <th>Nº de Póliza</th>
+              <th>Tipo de Póliza</th>
+              <th>Placa</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Año</th>
+              <th>Color</th>
+              <th>Cobertura</th>
+            </thead>
+            <tbody>
+              {% for c in carros %}
+                <tr>
+                  <td>{{c.poliza.numPoliza}}</td>
+                  <td>{{c.poliza.tipo}}-{{c.poliza.nivel}}</td>
+                  <td>{{c.placa}}</td>
+                  <td>{{c.marca}}</td>
+                  <td>{{c.modelo}}</td>
+                  <td>{{c.anio}}</td>
+                  <td>{{c.color}}</td>
+                  <td>{{c.poliza.cobertura}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          Usted no tiene Polizas Registradas
+        {% endif %}
+          <ul class="tab-pane" id="tab2" align="right">
+            {% if page_obj.has_previous %}
+              <li class="btn btn-primary btnPrevious">
+                  <a href="?page={{ page_obj.previous_page_number }}">&laquo;Anterior</a>
+              </li>
+            {% endif %}
+           {% if page_obj.has_next %}
+                <li class="btn btn-primary btnNext">
+                  <a href="?page={{ page_obj.next_page_number }}">Siguiente&raquo;</a>
+                </li>
+            {% endif %}
+            </ul>
+          </section>
+        </div>
+    </section>
+</div>
+
+
+{% endblock content %}
+

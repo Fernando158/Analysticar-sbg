@@ -1,0 +1,1541 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript">
+    var factory = null;
+    var clientId = getUrlParam('id') || 'client_id';
+    var clientSecret = getUrlParam('secret') || 'client_secret';
+    var useSimpleModule = getUrlParam('simple').toLowerCase() !== 'false';
+    var dbuser = getUrlParam('dbuser') || '';
+    var dbpwd = getUrlParam('dbpwd') || '';
+    var sessionObj = null;
+    var cognosRootURL = null;
+    var tab = '&nbsp;&nbsp;&nbsp;&nbsp;';
+    var validPropertiesToEncrypt = useSimpleModule ? ['source.jdbc.schema', 'source.user', 'source.password', 'source.jdbc.jdbcUrl', 'source.srcUrl.sourceUrl'] : ['dataSource.0.schema', 'dataSource.0.user', 'dataSource.0.password',
+      'dataSource.0.jdbc.jdbcUrl', 'dataSource.0.csvUrl'
+    ];
+    var sampleSpec = {
+      "name": "New dashboard",
+      "layout": {
+        "id": "page0",
+        "items": [{
+          "id": "page1",
+          "items": [{
+            "id": "model0000015f112a1b00_00000004",
+            "style": {
+              "left": "65px",
+              "top": "21px",
+              "height": "420px",
+              "width": "500px"
+            },
+            "type": "widget"
+          }],
+          "type": "absolute",
+          "title": "Tab 1",
+          "templateName": "NoTemplate"
+        }],
+        "style": {
+          "height": "100%"
+        },
+        "type": "tab"
+      },
+      "theme": "defaultTheme",
+      "version": 1006,
+      "eventGroups": [{
+        "id": "page1:1",
+        "widgetIds": ["model0000015f112a1b00_00000004"]
+      }],
+      "pageContext": [],
+      "dataSources": {
+        "version": "1.0",
+        "sources": [{
+          "id": "model0000015f1129e423_00000001",
+          "assetId": "http://localhost:9080/temp-service/1606964b316d466fab46fc3240187044",
+          "type": "url",
+          "clientId": "myUniqueId123",
+          "module": {
+            "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+            "source": {
+              "id": "StringID",
+              "jdbc": {
+                "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+                "driverClassName": "com.ibm.db2.jcc.DB2Driver",
+                "schema": "GOSALEST"
+              },
+              "user": dbuser,
+              "password": dbpwd
+            },
+            "table": {
+              "name": "T1",
+              "description": "description of the table for visual hints ",
+              "column": [{
+                "name": "Year",
+                "description": "String",
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "label": "Year",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct",
+                "taxonomyFamily": "cYear"
+              }, {
+                "name": "Product line",
+                "description": "String",
+                "datatype": "VARCHAR(24)",
+                "nullable": true,
+                "label": "Product line",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct"
+              }, {
+                "name": "Order method type",
+                "datatype": "VARCHAR(11)",
+                "nullable": true,
+                "label": "Order method type",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct"
+              }, {
+                "name": "Retailer country",
+                "datatype": "VARCHAR(14)",
+                "nullable": true,
+                "label": "Retailer country",
+                "usage": "identifier",
+                "regularAggregate": "countDistinct",
+                "taxonomyFamily": "cCountry"
+              }, {
+                "name": "Revenue",
+                "datatype": "DECIMAL(11,2)",
+                "nullable": true,
+                "label": "Revenue",
+                "usage": "fact",
+                "regularAggregate": "total"
+              }, {
+                "name": "Quantity",
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "label": "Quantity",
+                "usage": "fact",
+                "regularAggregate": "total"
+              }]
+            },
+            "label": "Module Name",
+            "identifier": "moduleId"
+          },
+          "name": "Test Source",
+          "shaping": {
+            "embeddedModuleUpToDate": true
+          }
+        }]
+      },
+      "widgets": {
+        "model0000015f112a1b00_00000004": {
+          "id": "model0000015f112a1b00_00000004",
+          "data": {
+            "dataViews": [{
+              "modelRef": "model0000015f1129e423_00000001",
+              "dataItems": [{
+                "id": "model0000015f112a1b00_00000000",
+                "itemId": "T1.Product_line",
+                "itemLabel": "Product Line"
+              }, {
+                "id": "model0000015f112a1b00_00000001",
+                "itemId": "T1.Revenue",
+                "itemLabel": "Revenue"
+              }]
+            }]
+          },
+          "slotmapping": {
+            "slots": [{
+              "name": "categories",
+              "dataItems": ["model0000015f112a1b00_00000000"],
+              "caption": "Bars"
+            }, {
+              "name": "values",
+              "dataItems": ["model0000015f112a1b00_00000001"],
+              "caption": "Length"
+            }]
+          },
+          "type": "live",
+          "name": "",
+          "visId": "com.ibm.vis.rave2bundlecolumn"
+        }
+      }
+    };
+    var sampleBikeShareRidesDemographModule = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_Transport_Sensor_v3_1.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_Transport_Sensor_v3_1",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Cliente",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "identifier",
+        "label": "Cliente",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Fecha",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Fecha",
+        "label": "Fecha",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Provincia",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Provincia",
+        "label": "Provincia",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Ciudad",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Ciudad",
+        "label": "Ciudad",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Sexo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Sexo",
+        "label": "Sexo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Edad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Edad",
+        "label": "Edad",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Transporte-autobus",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Transporte-autobus",
+        "label": "Uso de Transporte Publico (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Transporte-bicicleta",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Transporte-bicicleta",
+        "label": "Uso de la bicicleta (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Transporte-caminando",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Transporte-caminando",
+        "label": "Porcentaje caminando (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Transporte-vehiculo",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Transporte-vehiculo (%)",
+        "label": "Uso del vehiculo (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Porcentaje_tráfico_vehicular",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Porcentaje_tráfico_vehicular",
+        "label": "Índice de tráfico pesado",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Riesgo",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Prob_Riesgo(%)",
+        "label": "Porcentaje de Riesgo",
+        "usage": "fact",
+        "regularAggregate": "total"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+
+var sampleBike = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_Transport_Sensor_v3_2.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_Transport_Sensor_v3_2",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Cliente",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "identifier",
+        "label": "Cliente",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Fecha",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Fecha",
+        "label": "Fecha",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Provincia",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Provincia",
+        "label": "Provincia",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Ciudad",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Ciudad",
+        "label": "Ciudad",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Sexo",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Sexo",
+        "label": "Sexo",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Edad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Edad",
+        "label": "Edad",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Promedio_horas_uso_vehículo",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Promedio_horas_uso_vehículo",
+        "label": "Promedio de horas uso vehículo",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Uso_teléfono",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Uso_teléfono",
+        "label": "Uso del teléfono (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Eficiencia",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Eficiencia",
+        "label": "Eficiencia (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Promedio_Velocidad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Promedio_Velocidad_(km-h)",
+        "label": "Promedio de Velocidad",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Anticipación",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Anticipación",
+        "label": "Anticipación (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Legalidad",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Legalidad",
+        "label": "Legalidad (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Porcentaje_Riesgo",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Porcentaje de Probabilidad (%)",
+        "label": "Porcentaje de Probabilidad (%)",
+        "usage": "fact",
+        "regularAggregate": "total"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+  
+  var DemographModule = {
+  "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
+  "source": {
+    "id": "CSV_File",
+    "srcUrl": {
+      "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/modelo_data_sensor_sentimentv10.csv",
+      "mimeType": "text/csv",
+      "property": [
+        {
+          "name": "separator",
+          "value": ","
+        },
+        {
+          "name": "ColumnNamesLine",
+          "value": "true"
+        }
+      ]
+    }
+  },
+  "table": {
+    "name": "Data_Transport_Sensor_v1",
+    "description": "description of the table for visual hints",
+    "column": [
+      {
+        "name": "Cliente",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "identifier",
+        "label": "Cliente",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Fecha",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Fecha",
+        "label": "Fecha",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Porcentaje_de_Conversación_%",
+        "datatype": "DOUBLE",
+        "nullable": true,
+        "description": "Porcentaje_de_Conversación_%",
+        "label": "Porcentaje de Conversación en el Vehículo",
+        "usage": "fact",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Porcentaje_de_Conversación",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Porcentaje_de_Conversación",
+        "label": "Porcentaje de Conversación en el Vehículo",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Tono_de_voz",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Tono_de_voz",
+        "label": "Tono de voz",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Tono_de_voz_%",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Tono_de_voz_%",
+        "label": "Tono de voz %",
+        "usage": "fact",
+        "regularAggregate": "total"
+      },
+      {
+        "name": "Tipo_de_música",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Tipo_de_música",
+        "label": "Tipo de música",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Estado_de_sentimiento",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Estado_de_sentimiento",
+        "label": "Estado de sentimiento del conductor",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Patrón_de_conducción",
+        "datatype": "NVARCHAR(256)",
+        "nullable": true,
+        "description": "Patrón_de_conducción",
+        "label": "Patrón de conducción",
+        "usage": "attribute",
+        "regularAggregate": "countDistinct"
+      },
+      {
+        "name": "Número_de_casos",
+        "datatype": "BIGINT",
+        "nullable": true,
+        "description": "Número_de_casos",
+        "label": "Número de casos",
+        "usage": "fact",
+        "regularAggregate": "total"
+      }
+    ]
+  },
+  "label": "Module Name",
+  "identifier": "moduleId"
+};
+    // Use the old module spec
+    if (!useSimpleModule) {
+      sampleSpec = {
+        "name": "New dashboard",
+        "layout": {
+          "id": "page0",
+          "items": [{
+            "id": "page1",
+            "items": [{
+              "id": "model0000015f112a1b00_00000004",
+              "style": {
+                "left": "65px",
+                "top": "21px",
+                "height": "420px",
+                "width": "500px"
+              },
+              "type": "widget"
+            }],
+            "type": "absolute",
+            "title": "Tab 1",
+            "templateName": "NoTemplate"
+          }],
+          "style": {
+            "height": "100%"
+          },
+          "type": "tab"
+        },
+        "theme": "defaultTheme",
+        "version": 1006,
+        "eventGroups": [{
+          "id": "page1:1",
+          "widgetIds": ["model0000015f112a1b00_00000004"]
+        }],
+        "pageContext": [],
+        "dataSources": {
+          "version": "1.0",
+          "sources": [{
+            "id": "model0000015f1129e423_00000001",
+            "assetId": "http://localhost:9080/temp-service/1606964b316d466fab46fc3240187044",
+            "type": "url",
+            "clientId": "myUniqueId123",
+            "module": {
+              "version": "4.0",
+              "container": "A_DashDb.A_DashDb.null.GOSALEST",
+              "dataSource": [{
+                "schema": "GOSALEST",
+                "jdbc": {
+                  "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+                  "driverClassName": "com.ibm.db2.jcc.DB2Driver"
+                },
+                "user": dbuser,
+                "password": dbpwd,
+                "table": [{
+                  "tableItem": [{
+                    "column": {
+                      "datatype": "SMALLINT",
+                      "nullable": true,
+                      "vendorType": "SMALLINT",
+                      "name": "Year"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(24)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Product line"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(11)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Order method type"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "VARCHAR(14)",
+                      "nullable": true,
+                      "vendorType": "VARCHAR",
+                      "name": "Retailer country"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "DECIMAL(11,2)",
+                      "nullable": true,
+                      "vendorType": "DECIMAL",
+                      "name": "Revenue"
+                    }
+                  }, {
+                    "column": {
+                      "datatype": "SMALLINT",
+                      "nullable": true,
+                      "vendorType": "SMALLINT",
+                      "name": "Quantity"
+                    }
+                  }],
+                  "name": "T1"
+                }],
+                "name": "A_DashDb..GOSALEST"
+              }],
+              "querySubject": [{
+                "ref": ["T1"],
+                "item": [{
+                  "queryItem": {
+                    "identifier": "Year_",
+                    "label": "Year",
+                    "expression": "Year",
+                    "usage": "identifier",
+                    "datatype": "SMALLINT",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct",
+                    "taxonomy": [{
+                      "domain": "cognos",
+                      "family": "cYear",
+                      "class": "cTime"
+                    }]
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Product_line",
+                    "label": "Product Line",
+                    "expression": "Product line",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(24)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Order_method_type",
+                    "label": "Order Method Type",
+                    "expression": "Order method type",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(11)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Retailer_country",
+                    "label": "Retailer Country",
+                    "expression": "Retailer country",
+                    "usage": "identifier",
+                    "datatype": "VARCHAR(14)",
+                    "nullable": true,
+                    "regularAggregate": "countDistinct",
+                    "taxonomy": [{
+                      "domain": "cognos",
+                      "family": "cCountry",
+                      "class": "cGeoLocation"
+                    }]
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Revenue",
+                    "label": "Revenue",
+                    "expression": "Revenue",
+                    "usage": "fact",
+                    "datatype": "DECIMAL(11,2)",
+                    "nullable": true,
+                    "regularAggregate": "total"
+                  }
+                }, {
+                  "queryItem": {
+                    "identifier": "Quantity",
+                    "label": "Quantity",
+                    "expression": "Quantity",
+                    "usage": "fact",
+                    "datatype": "SMALLINT",
+                    "nullable": true,
+                    "regularAggregate": "total"
+                  }
+                }],
+                "identifier": "T1",
+                "label": "T1"
+              }],
+              "filter": [],
+              "calculation": [],
+              "relationship": [],
+              "identifier": "Ab_Ab_nl_GT_pe.base",
+              "label": "GOSALEST"
+            },
+            "name": "Test Source",
+            "shaping": {
+              "embeddedModuleUpToDate": true
+            }
+          }]
+        },
+        "widgets": {
+          "model0000015f112a1b00_00000004": {
+            "id": "model0000015f112a1b00_00000004",
+            "data": {
+              "dataViews": [{
+                "modelRef": "model0000015f1129e423_00000001",
+                "dataItems": [{
+                  "id": "model0000015f112a1b00_00000000",
+                  "itemId": "T1.Product_line",
+                  "itemLabel": "Product Line"
+                }, {
+                  "id": "model0000015f112a1b00_00000001",
+                  "itemId": "T1.Revenue",
+                  "itemLabel": "Revenue"
+                }]
+              }]
+            },
+            "slotmapping": {
+              "slots": [{
+                "name": "categories",
+                "dataItems": ["model0000015f112a1b00_00000000"],
+                "caption": "Bars"
+              }, {
+                "name": "values",
+                "dataItems": ["model0000015f112a1b00_00000001"],
+                "caption": "Length"
+              }]
+            },
+            "type": "live",
+            "name": "",
+            "visId": "com.ibm.vis.rave2bundlecolumn"
+          }
+        }
+      };
+
+      sampleModule = {
+        "version": "4.0",
+        "container": "A_DashDb.A_DashDb.null.GOSALEST",
+        "dataSource": [{
+          "schema": "GOSALEST",
+          "jdbc": {
+            "jdbcUrl": "jdbc:db2://dashdb-txn-flex-yp-dal09-300.services.dal.bluemix.net:50000/BLUDB",
+            "driverClassName": "com.ibm.db2.jcc.DB2Driver"
+          },
+          "user": dbuser,
+          "password": dbpwd,
+          "table": [{
+            "tableItem": [{
+              "column": {
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "vendorType": "SMALLINT",
+                "name": "Year"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(24)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Product line"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(11)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Order method type"
+              }
+            }, {
+              "column": {
+                "datatype": "VARCHAR(14)",
+                "nullable": true,
+                "vendorType": "VARCHAR",
+                "name": "Retailer country"
+              }
+            }, {
+              "column": {
+                "datatype": "DECIMAL(11,2)",
+                "nullable": true,
+                "vendorType": "DECIMAL",
+                "name": "Revenue"
+              }
+            }, {
+              "column": {
+                "datatype": "SMALLINT",
+                "nullable": true,
+                "vendorType": "SMALLINT",
+                "name": "Quantity"
+              }
+            }],
+            "name": "T1"
+          }],
+          "name": "A_DashDb..GOSALEST"
+        }],
+        "querySubject": [{
+          "ref": ["T1"],
+          "item": [{
+            "queryItem": {
+              "identifier": "Year_",
+              "label": "Year",
+              "expression": "Year",
+              "usage": "identifier",
+              "datatype": "SMALLINT",
+              "nullable": true,
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cYear",
+                "class": "cTime"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Product_line",
+              "label": "Product Line",
+              "expression": "Product line",
+              "usage": "identifier",
+              "datatype": "VARCHAR(24)",
+              "nullable": true,
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Order_method_type",
+              "label": "Order Method Type",
+              "expression": "Order method type",
+              "usage": "identifier",
+              "datatype": "VARCHAR(11)",
+              "nullable": true,
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Retailer_country",
+              "label": "Retailer Country",
+              "expression": "Retailer country",
+              "usage": "identifier",
+              "datatype": "VARCHAR(14)",
+              "nullable": true,
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cCountry",
+                "class": "cGeoLocation"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Revenue",
+              "label": "Revenue",
+              "expression": "Revenue",
+              "usage": "fact",
+              "datatype": "DECIMAL(11,2)",
+              "nullable": true,
+              "regularAggregate": "total"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Quantity",
+              "label": "Quantity",
+              "expression": "Quantity",
+              "usage": "fact",
+              "datatype": "SMALLINT",
+              "nullable": true,
+              "regularAggregate": "total"
+            }
+          }],
+          "identifier": "T1",
+          "label": "T1"
+        }],
+        "filter": [],
+        "calculation": [],
+        "relationship": [],
+        "identifier": "Ab_Ab_nl_GT_pe.base",
+        "label": "GOSALEST"
+      };
+
+      sampleCSVModule = {
+        "version": "5.0",
+        "dataSource": [{
+          "csvUrl": "/daas/dataSetDemo.csv",
+          "databaseType": "PARQUET",
+          "table": [{
+            "numberOfRows": 84672,
+            "tableItem": [{
+              "column": {
+                "datatype": "BIGINT",
+                "vendorType": "INT64",
+                "name": "Year_",
+                "description": "Year"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(24)",
+                "vendorType": "STRING(24)",
+                "name": "Product_line",
+                "description": "Product line"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(17)",
+                "vendorType": "STRING(17)",
+                "name": "Order_method_type",
+                "description": "Order method type"
+              }
+            }, {
+              "column": {
+                "datatype": "NVARCHAR(16)",
+                "vendorType": "STRING(16)",
+                "name": "Retailer_country",
+                "description": "Retailer country"
+              }
+            }, {
+              "column": {
+                "datatype": "DOUBLE",
+                "vendorType": "FLOAT64",
+                "name": "Revenue",
+                "description": "Revenue"
+              }
+            }, {
+              "column": {
+                "datatype": "BIGINT",
+                "vendorType": "INT64",
+                "name": "Quantity",
+                "description": "Quantity"
+              }
+            }],
+            "name": "dataSetDemo_csv"
+          }],
+          "name": "dataSetDemo_csv"
+        }],
+        "querySubject": [{
+          "ref": ["dataSetDemo_csv"],
+          "item": [{
+            "queryItem": {
+              "identifier": "Year_",
+              "description": "Year",
+              "label": "Year",
+              "hidden": false,
+              "expression": "Year_",
+              "usage": "attribute",
+              "datatype": "BIGINT",
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cYear",
+                "class": "cTime"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Product_line",
+              "description": "Product line",
+              "label": "Product line",
+              "hidden": false,
+              "expression": "Product_line",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(24)",
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Order_method_type",
+              "description": "Order method type",
+              "label": "Order method type",
+              "hidden": false,
+              "expression": "Order_method_type",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(17)",
+              "regularAggregate": "countDistinct"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Retailer_country",
+              "description": "Retailer country",
+              "label": "Retailer country",
+              "hidden": false,
+              "expression": "Retailer_country",
+              "usage": "attribute",
+              "datatype": "NVARCHAR(16)",
+              "regularAggregate": "countDistinct",
+              "taxonomy": [{
+                "domain": "cognos",
+                "family": "cCountry",
+                "class": "cGeoLocation"
+              }]
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Revenue",
+              "description": "Revenue",
+              "label": "Revenue",
+              "hidden": false,
+              "expression": "Revenue",
+              "usage": "fact",
+              "datatype": "DOUBLE",
+              "regularAggregate": "total"
+            }
+          }, {
+            "queryItem": {
+              "identifier": "Quantity",
+              "description": "Quantity",
+              "label": "Quantity",
+              "hidden": false,
+              "expression": "Quantity",
+              "usage": "fact",
+              "datatype": "BIGINT",
+              "regularAggregate": "total"
+            }
+          }],
+          "identifier": "dataSetDemo_csv",
+          "label": "Data Set Demo Csv"
+        }],
+        "identifier": "ds.dataSetDemo_csv.base",
+        "label": "dataSetDemo.csv"
+      };
+    }
+
+    function getUrlParam(name) {
+      var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      return (results === null) ? '' : results[1];
+    }
+
+    function execute() {
+      var script = document.getElementById('actionScript').textContent;
+      console.log(script)
+      try {
+        eval(script);
+      } catch (e) {
+        alert('error encountered, see console.')
+        console.error(e);
+      }
+    }
+
+    function getNewSessionScript() {
+      return '' +
+        'window.newSession(\'' + clientId + '\',\'' + clientSecret + '\', {' +
+        '<br>' + tab + '\'expiresIn\': 3600,' +
+        '<br>' + tab + '\'webDomain\': \'SAMEORIGIN\'' +
+        '<br>});';
+    }
+
+    /*$.getJSON("data", function(datos) {
+        alert("Dato: " + datos["name"]);
+        console.log(datos)
+        $.each(datos["primos"], function(idx,primo) {
+            alert("Numero primo: " + primo);
+        });
+    });*/
+
+
+    function prueba() { window.api = new CognosApi({    cognosRootURL: 'https://dde-us-south.analytics.ibm.com/daas/',    sessionCode: '{{sessionCode}}',    language: 'en',    node: document.getElementById('containerDivId')});window.api.initialize().then(function() {    console.log('API created successfully.'); prueba2()}, function(err) {    console.log('Failed to create API. ' + err.message);});
+      }
+
+    function prueba2(){
+
+      window.api.dashboard.openDashboard({    dashboardSpec: {"name":"New dashboard","layout":{"id":"page0","items":[{"id":"model00000169d8df6550_00000000","items":[{"id":"model00000169d8df6551_00000000","css":"templateBox aspectRatio_default","items":[{"id":"model00000169d8df6551_00000001","style":{"top":"0%","left":"0%","right":"0%","bottom":"75%"},"type":"templateDropZone","templateName":"dz1","relatedLayouts":""},{"id":"model00000169d8df6551_00000002","css":"noBorderTop","style":{"top":"25%","left":"0%","right":"0%","bottom":"0%"},"type":"templateDropZone","templateName":"dz2","relatedLayouts":""},{"id":"model0000016a0d716e0c_00000000","style":{"width":"15.919923736892278%","height":"13.864818024263432%","top":"0.1733102253032929%","left":"83.79408960915157%"},"type":"widget","relatedLayouts":"","clones":3},{"id":"model00000169d9360c65_00000003","style":{"left":"81.41086749285033%","top":"24.61005199306759%","height":"11.43847487001733%","width":"12.106768350810295%"},"type":"widget","relatedLayouts":""},{"id":"model00000169d8fc8f67_00000003","style":{"left":"26.215443279313632%","top":"24.61005199306759%","height":"11.611785095320624%","width":"11.820781696854146%","opacity":1},"type":"widget","relatedLayouts":""},{"id":"model00000169d8fccffe_00000003","style":{"left":"7.816968541468065%","top":"24.61005199306759%","height":"11.611785095320624%","width":"11.916110581506196%"},"type":"widget","relatedLayouts":""},{"id":"model00000169d90dfea9_00000000","style":{"left":"0.09532888465204957%","top":"39.341421143847484%","height":"49.393414211438476%","width":"99.61868446139181%"},"type":"widget","relatedLayouts":""},{"id":"model00000169d8fd783f_00000003","style":{"left":"43.94661582459485%","top":"24.61005199306759%","height":"11.611785095320624%","width":"11.916110581506196%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a029e5dff_00000000","style":{"left":"0.09532888465204957%","top":"91.68110918544194%","height":"66.03119584055459%","width":"99.61868446139181%","opacity":1},"type":"widget","relatedLayouts":""},{"id":"model00000169d92e400d_00000000","from":"model00000169d92c8905_00000000","style":{"width":"45.853193517635845%","height":"16.11785095320624%","left":"0%","top":"88.73483535528597%","opacity":1},"type":"widget","relatedLayouts":"","clones":3},{"id":"model00000169d8fdd218_00000002","style":{"left":"61.48713060057197%","top":"24.61005199306759%","height":"11.611785095320624%","width":"11.916110581506196%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a07a82704_00000000","from":"model00000169d92e400d_00000000","style":{"width":"46.61582459485224%","height":"9.185441941074524%","left":"0%","top":"36.5684575389948%","opacity":1},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a07b1f944_00000000","from":"model00000169d8fb220c_00000000","style":{"width":"13.15538608198284%","height":"10.571923743500866%","left":"7.149666348903718%","top":"22.357019064124785%"},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07b8bfe6_00000000","from":"model0000016a07b1f944_00000000","style":{"width":"16.30123927550048%","height":"10.571923743500866%","left":"25.166825548141087%","top":"22.0103986135182%","transform":"","-webkit-transform":""},"type":"widget","relatedLayouts":"","clones":2},{"id":"model0000016a07bcb523_00000000","from":"model0000016a07b1f944_00000000","style":{"width":"14.204003813155387%","height":"10.398613518197573%","left":"44.6139180171592%","top":"22.357019064124785%"},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07bd5911_00000000","from":"model0000016a07bcb523_00000000","style":{"width":"14.871306005719733%","height":"10.225303292894282%","left":"63.203050524308864%","top":"22.0103986135182%"},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07c04e85_00000000","from":"model0000016a07bd5911_00000000","style":{"width":"13.536701620591039%","height":"10.225303292894282%","left":"81.41086749285033%","top":"22.18370883882149%"},"type":"widget","relatedLayouts":"","clones":3}],"type":"scalingAbsolute"}],"type":"container","title":{"translationTable":{"Default":"Conducción"}},"templateName":"Template2"},{"id":"page1","items":[{"id":"page2","css":"templateBox aspectRatio_default","items":[{"id":"page3","style":{"top":"0%","left":"0%","right":"0%","bottom":"75%"},"type":"templateDropZone","templateName":"dz1"},{"id":"page4","css":"noBorderTop","style":{"top":"25%","left":"0%","right":"0%","bottom":"0%"},"type":"templateDropZone","templateName":"dz2"},{"id":"model00000169d8d1e488_00000003","style":{"left":"75.40514775977121%","top":"24.61005199306759%","height":"11.785095320623917%","width":"14.108674928503337%"},"type":"widget","relatedLayouts":""},{"id":"model00000169d8ee25b5_00000000","style":{"left":"0%","top":"43.8474870017331%","height":"32.06239168110918%","width":"99.71401334604386%"},"type":"widget","relatedLayouts":"","clones":1},{"id":"model00000169d8f21442_00000001","from":"model00000169d8ee25b5_00000000","style":{"left":"0%","top":"79.02946273830156%","height":"34.1421143847487%","width":"99.90467111534795%"},"type":"widget","relatedLayouts":""},{"id":"model00000169d8cd9de2_00000003","style":{"left":"30.79122974261201%","top":"24.61005199306759%","height":"11.785095320623917%","width":"14.108674928503337%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a02b98d50_00000001","style":{"left":"7.530981887511916%","top":"24.61005199306759%","height":"11.785095320623917%","width":"14.013346043851287%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a02b9cc34_00000001","style":{"left":"53.38417540514776%","top":"24.61005199306759%","height":"11.785095320623917%","width":"14.108674928503337%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a07d966b3_00000000","from":"model00000169d8ea4adf_00000000","style":{"width":"15.824594852240228%","height":"8.492201039861351%","left":"7.530981887511916%","top":"22.87694974003466%","transform":"","-webkit-transform":""},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07dbc29c_00000000","from":"model0000016a07d966b3_00000000","style":{"width":"15.824594852240228%","height":"8.492201039861351%","left":"30.79122974261201%","top":"22.87694974003466%","transform":"","-webkit-transform":""},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07dca7e8_00000000","from":"model0000016a07dbc29c_00000000","style":{"width":"15.919923736892278%","height":"8.492201039861351%","left":"53.38417540514776%","top":"22.87694974003466%","transform":"","-webkit-transform":""},"type":"widget","relatedLayouts":"","clones":4},{"id":"model0000016a07dd3cc7_00000000","from":"model0000016a07dca7e8_00000000","style":{"width":"15.824594852240228%","height":"8.492201039861351%","left":"76.73975214489991%","top":"22.87694974003466%","transform":"","-webkit-transform":""},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a07dea05c_00000000","from":"model0000016a07a82704_00000000","style":{"width":"46.61582459485224%","height":"9.705372616984402%","left":"0.09532888465204957%","top":"41.59445407279029%","opacity":1},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a2c8774d7_00000000","from":"model0000016a0d716e0c_00000000","style":{"width":"15.919923736892278%","height":"13.864818024263432%","top":"0.1733102253032929%","left":"83.88941849380362%"},"type":"widget","relatedLayouts":"","clones":3}],"type":"scalingAbsolute"}],"type":"container","title":{"translationTable":{"Default":"Transporte"}},"templateName":"Template2"},{"id":"model00000169d9178140_00000000","items":[{"id":"model00000169d9178140_00000001","css":"templateBox aspectRatio_default","items":[{"id":"model00000169d9178140_00000002","style":{"top":"0%","left":"0%","right":"0%","bottom":"75%"},"type":"templateDropZone","templateName":"dz1","relatedLayouts":""},{"id":"model00000169d9178140_00000003","css":"noBorderTop","style":{"top":"25%","left":"0%","right":"0%","bottom":"0%"},"type":"templateDropZone","templateName":"dz2"},{"id":"model00000169d923c6e4_00000000","style":{"left":"0%","top":"25.12998266897747%","height":"44.36741767764298%","width":"99.71401334604386%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a07e4634a_00000000","from":"model0000016a07dea05c_00000000","style":{"width":"55.195424213536704%","height":"9.878682842287695%","left":"0%","top":"22.703639514731368%","opacity":1},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a11d94eaf_00000000","style":{"left":"0.09532888465204957%","top":"71.92374350086655%","height":"41.76776429809359%","width":"49.666348903717825%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a126d8556_00000000","from":"model0000016a07e4634a_00000000","style":{"width":"39.18017159199238%","height":"9.705372616984402%","left":"0.09532888465204957%","top":"69.49740034662045%","opacity":1},"type":"widget","relatedLayouts":"","clones":3},{"id":"model0000016a12748572_00000000","style":{"left":"52.62154432793136%","top":"72.09705372616985%","height":"41.76776429809359%","width":"47.18779790276454%"},"type":"widget","relatedLayouts":""},{"id":"model0000016a127a34f9_00000000","from":"model0000016a126d8556_00000000","style":{"width":"44.6139180171592%","height":"9.705372616984402%","left":"54.90943755958055%","top":"69.49740034662045%","opacity":1},"type":"widget","relatedLayouts":"","clones":2},{"id":"model0000016a2c88634f_00000000","from":"model0000016a2c8774d7_00000000","style":{"width":"15.919923736892278%","height":"13.864818024263432%","top":"0.1733102253032929%","left":"83.88941849380362%"},"type":"widget","relatedLayouts":"","clones":2}],"type":"scalingAbsolute"}],"type":"container","title":{"translationTable":{"Default":"Patrones"}},"templateName":"Template2"}],"style":{"height":"100%"},"type":"tab"},"theme":"darkTheme","version":1009,"eventGroups":[{"id":"page1:1","widgetIds":["model00000169d8cd9de2_00000003","model00000169d8d1e488_00000003","model00000169d8ee25b5_00000000","model00000169d8f21442_00000001","model0000016a02b98d50_00000001","model0000016a02b9cc34_00000001"]},{"id":"model00000169d8df6550_00000000:1","widgetIds":["model00000169d8fc8f67_00000003","model00000169d8fccffe_00000003","model00000169d8fd783f_00000003","model00000169d8fdd218_00000002","model00000169d90dfea9_00000000","model00000169d9360c65_00000003","model0000016a029e5dff_00000000"]},{"id":"model00000169d9178140_00000000:1","widgetIds":["model00000169d923c6e4_00000000","model0000016a11d94eaf_00000000","model0000016a12748572_00000000"]}],"properties":{"defaultLocale":"Default"},"pageContext":[{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"model00000169d8df6550_00000000","hierarchyNames":["Cliente"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Cliente"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"model00000169d8df6550_00000000","hierarchyNames":["Sexo"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Sexo"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"model00000169d8df6550_00000000","hierarchyNames":["Ciudad"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Ciudad"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"model00000169d8df6550_00000000","hierarchyNames":["Provincia"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Provincia"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"page1","hierarchyNames":["Fecha"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Fecha"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"page1","hierarchyNames":["Sexo"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Sexo"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"page1","hierarchyNames":["Ciudad"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Ciudad"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d8cb4149_00000002","scope":"page1","hierarchyNames":["Provincia"],"hierarchyUniqueNames":["Data_Transport_Sensor_v3_1.Provincia"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d91899cc_00000002","scope":"model00000169d9178140_00000000","hierarchyNames":["Cliente"],"hierarchyUniqueNames":["Data_Transport_Sensor_v1.Cliente"],"isNamedSet":false},{"origin":"filter","table":"","alias":"0","sourceId":"model00000169d91899cc_00000002","scope":"model00000169d9178140_00000000","hierarchyNames":["Fecha"],"hierarchyUniqueNames":["Data_Transport_Sensor_v1.Fecha"],"isNamedSet":false}],"dataSources":{"version":"1.0","sources":[{"id":"model00000169d8cb4149_00000002","assetId":"assetId00000169d8cb4149_00000000","clientId":"myUniqueId221","module":{"xsd":"https://ibm.com/daas/module/1.0/module.xsd","source":{"id":"CSV_File","srcUrl":{"sourceUrl":"https://analyticar-sbg.mybluemix.net/static/Data_Transport_Sensor_v3_1.csv","mimeType":"text/csv","property":[{"name":"separator","value":","},{"name":"ColumnNamesLine","value":"true"}]}},"table":{"name":"Data_Transport_Sensor_v3_1","description":"description of the table for visual hints","column":[{"name":"Cliente","datatype":"NVARCHAR(256)","nullable":true,"description":"identifier","label":"Cliente","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Fecha","datatype":"NVARCHAR(256)","nullable":true,"description":"Fecha","label":"Fecha","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Provincia","datatype":"NVARCHAR(256)","nullable":true,"description":"Provincia","label":"Provincia","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Ciudad","datatype":"NVARCHAR(256)","nullable":true,"description":"Ciudad","label":"Ciudad","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Sexo","datatype":"NVARCHAR(256)","nullable":true,"description":"Sexo","label":"Sexo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Edad","datatype":"BIGINT","nullable":true,"description":"Edad","label":"Edad","usage":"fact","regularAggregate":"total"},{"name":"Transporte-autobus","datatype":"BIGINT","nullable":true,"description":"Transporte-autobus","label":"Uso de Transporte Publico (%)","usage":"fact","regularAggregate":"total"},{"name":"Transporte-bicicleta","datatype":"BIGINT","nullable":true,"description":"Transporte-bicicleta","label":"Uso de la bicicleta (%)","usage":"fact","regularAggregate":"total"},{"name":"Transporte-caminando","datatype":"BIGINT","nullable":true,"description":"Transporte-caminando","label":"Porcentaje caminando (%)","usage":"fact","regularAggregate":"total"},{"name":"Transporte-vehiculo","datatype":"BIGINT","nullable":true,"description":"Transporte-vehiculo (%)","label":"Uso del vehiculo (%)","usage":"fact","regularAggregate":"total"},{"name":"Porcentaje_tráfico_vehicular","datatype":"BIGINT","nullable":true,"description":"Porcentaje_tráfico_vehicular","label":"Índice de tráfico pesado","usage":"fact","regularAggregate":"total"},{"name":"Riesgo","datatype":"BIGINT","nullable":true,"description":"Prob_Riesgo(%)","label":"Porcentaje de Riesgo","usage":"fact","regularAggregate":"total"}]},"label":"Module Name","identifier":"moduleId"},"name":"Data_Transport_Sensor_v2","shaping":{"shapingId":"shaping0000016a02b96eed_00000000","embeddedModuleUpToDate":false,"moserJSON":{"version":"5.0.1","container":"C","useSpec":[{"identifier":"ES","type":"url","storeID":"baseModule","imports":"*"}],"expressionLocale":"en-us","calculation":[{"expression":"Data_Transport_Sensor_v3_1.Transporte_autobus + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Uso_de_Transporte_Público","label":"Uso de Transporte Público (%) ","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Uso de Transporte Público (%) \",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_Transport_Sensor_v3_1.Transporte_autobus\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]},{"expression":"Data_Transport_Sensor_v3_1.Transporte_vehiculo + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Uso_del_vehículo","label":"Uso del vehículo (%) ","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Uso del vehículo (%) \",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_Transport_Sensor_v3_1.Transporte_vehiculo\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]}],"metadataTreeView":[{"folderItem":[{"ref":"Uso_de_Transporte_Público"},{"ref":"Uso_del_vehículo"}]}],"dataRetrievalMode":"liveConnection","identifier":"newModel","label":"newModel"}}},{"id":"model00000169d8cbc286_00000002","assetId":"assetId00000169d8cbc286_00000000","clientId":"myUniqueId222","module":{"xsd":"https://ibm.com/daas/module/1.0/module.xsd","source":{"id":"CSV_File","srcUrl":{"sourceUrl":"https://analyticar-sbg.mybluemix.net/static/Data_Transport_Sensor_v3_2.csv","mimeType":"text/csv","property":[{"name":"separator","value":","},{"name":"ColumnNamesLine","value":"true"}]}},"table":{"name":"Data_Transport_Sensor_v3_2","description":"description of the table for visual hints","column":[{"name":"Cliente","datatype":"NVARCHAR(256)","nullable":true,"description":"identifier","label":"Cliente","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Fecha","datatype":"NVARCHAR(256)","nullable":true,"description":"Fecha","label":"Fecha","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Provincia","datatype":"NVARCHAR(256)","nullable":true,"description":"Provincia","label":"Provincia","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Ciudad","datatype":"NVARCHAR(256)","nullable":true,"description":"Ciudad","label":"Ciudad","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Sexo","datatype":"NVARCHAR(256)","nullable":true,"description":"Sexo","label":"Sexo","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Edad","datatype":"BIGINT","nullable":true,"description":"Edad","label":"Edad","usage":"fact","regularAggregate":"total"},{"name":"Promedio_horas_uso_vehículo","datatype":"DOUBLE","nullable":true,"description":"Promedio_horas_uso_vehículo","label":"Promedio de horas uso vehículo","usage":"fact","regularAggregate":"countDistinct"},{"name":"Uso_teléfono","datatype":"BIGINT","nullable":true,"description":"Uso_teléfono","label":"Uso del teléfono (%)","usage":"fact","regularAggregate":"total"},{"name":"Eficiencia","datatype":"BIGINT","nullable":true,"description":"Eficiencia","label":"Eficiencia (%)","usage":"fact","regularAggregate":"total"},{"name":"Promedio_Velocidad","datatype":"BIGINT","nullable":true,"description":"Promedio_Velocidad_(km-h)","label":"Promedio de Velocidad","usage":"fact","regularAggregate":"total"},{"name":"Anticipación","datatype":"BIGINT","nullable":true,"description":"Anticipación","label":"Anticipación (%)","usage":"fact","regularAggregate":"total"},{"name":"Legalidad","datatype":"BIGINT","nullable":true,"description":"Legalidad","label":"Legalidad (%)","usage":"fact","regularAggregate":"total"},{"name":"Porcentaje_Riesgo","datatype":"BIGINT","nullable":true,"description":"Porcentaje de Probabilidad (%)","label":"Porcentaje de Probabilidad (%)","usage":"fact","regularAggregate":"total"}]},"label":"Module Name","identifier":"moduleId"},"name":"Data_Transport_Sensor_v3_1","shaping":{"shapingId":"shaping00000169d935c01c_00000000","embeddedModuleUpToDate":false,"moserJSON":{"version":"5.0.1","container":"C","useSpec":[{"identifier":"ES","type":"url","storeID":"baseModule","imports":"*"}],"expressionLocale":"en-us","calculation":[{"expression":"Data_Transport_Sensor_v3_2.Porcentaje_Riesgo + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Porcentaje_de_Riesgo","label":"Porcentaje de Riesgo (%)","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Porcentaje de Riesgo (%)\",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_Transport_Sensor_v3_2.Porcentaje_Riesgo\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]},{"expression":"Data_Transport_Sensor_v3_2.Promedio_Velocidad + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Promedio_de_Velocidad_Km_h","label":"Promedio de Velocidad (Km/h)","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Promedio de Velocidad (Km/h)\",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_Transport_Sensor_v3_2.Promedio_Velocidad\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]}],"metadataTreeView":[{"folderItem":[{"ref":"Porcentaje_de_Riesgo"},{"ref":"Promedio_de_Velocidad_Km_h"}]}],"dataRetrievalMode":"liveConnection","identifier":"newModel","label":"newModel"}}},{"id":"model00000169d91899cc_00000002","assetId":"assetId00000169d91899cc_00000000","clientId":"myUniqueId223","module":{"xsd":"https://ibm.com/daas/module/1.0/module.xsd","source":{"id":"CSV_File","srcUrl":{"sourceUrl":"https://analyticar-sbg.mybluemix.net/static/modelo_data_sensor_sentimentv10.csv","mimeType":"text/csv","property":[{"name":"separator","value":","},{"name":"ColumnNamesLine","value":"true"}]}},"table":{"name":"Data_Transport_Sensor_v1","description":"description of the table for visual hints","column":[{"name":"Cliente","datatype":"NVARCHAR(256)","nullable":true,"description":"identifier","label":"Cliente","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Fecha","datatype":"NVARCHAR(256)","nullable":true,"description":"Fecha","label":"Fecha","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Porcentaje_de_Conversación_%","datatype":"DOUBLE","nullable":true,"description":"Porcentaje_de_Conversación_%","label":"Porcentaje de Conversación en el Vehículo","usage":"fact","regularAggregate":"countDistinct"},{"name":"Porcentaje_de_Conversación","datatype":"BIGINT","nullable":true,"description":"Porcentaje_de_Conversación","label":"Porcentaje de Conversación en el Vehículo","usage":"fact","regularAggregate":"total"},{"name":"Tono_de_voz","datatype":"NVARCHAR(256)","nullable":true,"description":"Tono_de_voz","label":"Tono de voz","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Tono_de_voz_%","datatype":"BIGINT","nullable":true,"description":"Tono_de_voz_%","label":"Tono de voz %","usage":"fact","regularAggregate":"total"},{"name":"Tipo_de_música","datatype":"NVARCHAR(256)","nullable":true,"description":"Tipo_de_música","label":"Tipo de música","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Estado_de_sentimiento","datatype":"NVARCHAR(256)","nullable":true,"description":"Estado_de_sentimiento","label":"Estado de sentimiento del conductor","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Patrón_de_conducción","datatype":"NVARCHAR(256)","nullable":true,"description":"Patrón_de_conducción","label":"Patrón de conducción","usage":"attribute","regularAggregate":"countDistinct"},{"name":"Número_de_casos","datatype":"BIGINT","nullable":true,"description":"Número_de_casos","label":"Número de casos","usage":"fact","regularAggregate":"total"}]},"label":"Module Name","identifier":"moduleId"},"name":"sampleBikeShareRidesDemographModule","shaping":{"shapingId":"shaping0000016a02c13108_00000000","embeddedModuleUpToDate":false,"moserJSON":{"version":"5.0.1","container":"C","useSpec":[{"identifier":"ES","type":"url","storeID":"baseModule","imports":"*"}],"expressionLocale":"en-us","calculation":[{"expression":"Data_Transport_Sensor_v1.Número_de_casos + 0","usage":"fact","format":"","datatype":"DECIMAL(20,0)","nullable":true,"regularAggregate":"calculated","datatypeCategory":"number","highlevelDatatype":"decimal","facetDefinition":{"enabled":"automatic"},"identifier":"Número_de_casos_promedio","label":"Número de casos promedio","property":[{"name":"ui_expr","value":"{\"func\":\"simpleCalculation\",\"version\":\"5.0.1\",\"inputtedName\":\"Número de casos promedio\",\"operation\":\"+\",\"swap\":false,\"elementOperands\":[\"Data_Transport_Sensor_v1.Número_de_casos\",\"\"],\"numberOperands\":[\"\",\"0\"]}"}],"propertyOverride":["NEW"]}],"metadataTreeView":[{"folderItem":[{"ref":"Número_de_casos_promedio"}]}],"dataRetrievalMode":"liveConnection","identifier":"newModel","label":"newModel"}}}]},"drillThrough":[],"widgets":{"model00000169d8cd9de2_00000003":{"id":"model00000169d8cd9de2_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model00000169d8cd9de2_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_bicicleta","itemLabel":"Uso de la bicicleta (%)","aggregate":"avg"}],"id":"model00000169d8cd9de2_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8cd9de2_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169d8d1e488_00000003":{"id":"model00000169d8d1e488_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model00000169d8d1e488_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_caminando","itemLabel":"Porcentaje caminando (%)","aggregate":"avg"}],"id":"model00000169d8d1e488_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8d1e488_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169d8ee25b5_00000000":{"id":"model00000169d8ee25b5_00000000","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model00000169d8ee5ed1_00000001","itemId":"Data_Transport_Sensor_v3_1.Cliente","itemLabel":"Cliente"},{"id":"model00000169d8ee7f59_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_autobus","itemLabel":"Uso de Transporte Publico (%)","aggregate":"avg"},{"id":"model00000169d8ef60d8_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_bicicleta","itemLabel":"Uso de la bicicleta (%)"},{"id":"_multiMeasuresSeries","itemId":"_multiMeasuresSeries","itemLabel":"Measures group (2)"}],"id":"model00000169d8ee5ed1_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model00000169d8ee5ed1_00000001"],"dataItemSettings":[],"caption":"x-axis","id":"categories"},{"name":"values","dataItems":["model00000169d8ee7f59_00000000","model00000169d8ef60d8_00000000"],"caption":"y-axis","id":"values"},{"name":"series","dataItems":["_multiMeasuresSeries"],"caption":"Color","id":"series"}]},"type":"live","visId":"com.ibm.vis.rave2line","name":{"translationTable":{}},"localFilters":[],"properties":[{"id":"gridLines.visible","value":false},{"id":"lines.smooth","value":true},{"id":"markers.visible","value":false},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"valueLabels.visible","value":true},{"id":"colorPalette","value":"colorPalette4"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"fillColor":"transparent","borderColor":"transparent"},"model00000169d8f21442_00000001":{"id":"model00000169d8f21442_00000001","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model00000169d8ee5ed1_00000001","itemId":"Data_Transport_Sensor_v3_1.Cliente","itemLabel":"Cliente"},{"id":"model00000169d8f2d837_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_caminando","itemLabel":"Porcentaje caminando (%)","aggregate":"avg"},{"id":"model00000169d8f2ef39_00000000","itemId":"Data_Transport_Sensor_v3_1.Transporte_vehiculo","itemLabel":"Uso del vehiculo (%)","aggregate":"avg"},{"id":"_multiMeasuresSeries","itemId":"_multiMeasuresSeries","itemLabel":"Measures group (2)"}],"id":"model00000169d8ee5ed1_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model00000169d8ee5ed1_00000001"],"dataItemSettings":[],"caption":"x-axis","id":"categories"},{"name":"values","dataItems":["model00000169d8f2d837_00000000","model00000169d8f2ef39_00000000"],"caption":"y-axis","id":"values"},{"name":"series","dataItems":["_multiMeasuresSeries"],"caption":"Color","id":"series"}]},"type":"live","visId":"com.ibm.vis.rave2line","name":{"translationTable":{}},"localFilters":[],"properties":[{"id":"gridLines.visible","value":false},{"id":"lines.smooth","value":true},{"id":"markers.visible","value":false},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"valueLabels.visible","value":true},{"id":"colorPalette","value":"colorPalette4"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"fillColor":"transparent","borderColor":"transparent"},"model00000169d8fc8f67_00000003":{"id":"model00000169d8fc8f67_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d8fc8f67_00000000","itemId":"Data_Transport_Sensor_v3_2.Uso_teléfono","itemLabel":"Uso del teléfono (%)","aggregate":"avg"}],"id":"model00000169d8fc8f67_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8fc8f67_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169d8fccffe_00000003":{"id":"model00000169d8fccffe_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d8fccffe_00000000","itemId":"Data_Transport_Sensor_v3_2.Eficiencia","itemLabel":"Eficiencia (%)","aggregate":"avg"}],"id":"model00000169d8fccffe_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8fccffe_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"borderColor":"transparent"},"model00000169d8fd783f_00000003":{"id":"model00000169d8fd783f_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d8fd783f_00000000","itemId":"Data_Transport_Sensor_v3_2.Anticipación","itemLabel":"Anticipación (%)","aggregate":"avg"}],"id":"model00000169d8fd783f_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8fd783f_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"borderColor":"transparent"},"model00000169d8fdd218_00000002":{"id":"model00000169d8fdd218_00000002","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d8fdd217_00000000","itemId":"Data_Transport_Sensor_v3_2.Legalidad","itemLabel":"Legalidad (%)","aggregate":"avg"}],"id":"model00000169d8fdd218_00000000"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d8fdd217_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model00000169d90dfea9_00000000":{"id":"model00000169d90dfea9_00000000","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d90e2ce7_00000001","itemId":"Data_Transport_Sensor_v3_2.Provincia","itemLabel":"Provincia"},{"id":"model00000169d90e4b24_00000000","itemId":"Porcentaje_de_Riesgo","itemLabel":"Porcentaje de Riesgo (%)","aggregate":"avg"}],"id":"model00000169d90e2ce7_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"locations","dataItems":["model00000169d90e2ce7_00000001"],"dataItemSettings":[],"caption":"Locations","id":"locations","layerId":"data.region"},{"name":"locationColor","dataItems":["model00000169d90e4b24_00000000"],"caption":"Location color","id":"locationColor","layerId":"data.region"}],"layers":[{"type":"data.region","id":"data.region","dataViewId":"model00000169d90e2ce7_00000000"}]},"type":"live","visId":"com.ibm.vis.rave2bundletiledmap","name":{"translationTable":{}},"properties":[{"id":"mapStyle","value":"obsidian"},{"id":"widget.legend.position","value":"right"},{"id":"contColorPalette_data.region","value":"colorPalette7"},{"id":"latLong.transparency","value":0.24},{"id":"heatScalePalette_data.latlong","value":"DarkerForLowerValue"},{"id":"Mapbox.secretToken","value":"sk.eyJ1IjoiaWJtcmF2ZSIsImEiOiJjaXlrdjl6dzUwMDJlMnlwaXV3bTJtdGQ4In0.Ek4ZA_uWjmdwh9AzD-UWyg"},{"id":"Mapbox.accountName","value":"ibmrave"},{"id":"Mapbox.token","value":"pk.eyJ1IjoiaWJtcmF2ZSIsImEiOiJjaXRvZHFzdmYwM20zMnpzYmFxeHR4bTQyIn0.7rttWKsr9b1tVXpo0ZcWFw"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"localFilters":[],"fillColor":"transparent","borderColor":"transparent"},"model00000169d923c6e4_00000000":{"id":"model00000169d923c6e4_00000000","data":{"dataViews":[{"modelRef":"model00000169d91899cc_00000002","dataItems":[{"id":"model00000169d9240db5_00000002","itemId":"Data_Transport_Sensor_v1.Patrón_de_conducción","itemLabel":"Patrón de conducción"},{"id":"model00000169d9241b55_00000001","itemId":"Data_Transport_Sensor_v1.Estado_de_sentimiento","itemLabel":"Estado de sentimiento del conductor"},{"id":"model0000016a02c16e96_00000000","itemId":"Número_de_casos_promedio","itemLabel":"Número de casos promedio"}],"id":"model00000169d9240db5_00000001"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model00000169d9240db5_00000002"],"dataItemSettings":[],"caption":"Rows","id":"categories"},{"name":"series","dataItems":["model00000169d9241b55_00000001"],"caption":"Columns","id":"series"},{"name":"color","dataItems":["model0000016a02c16e96_00000000"],"caption":"Heat","id":"color"}]},"type":"live","visId":"com.ibm.vis.rave2heat","name":{"translationTable":{}},"localFilters":[],"properties":[{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"widget.legend.position","value":"right"},{"id":"contColorPalette","value":"colorPalette7"},{"id":"heatScalePalette","value":"DarkerForHigherValue"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"fillColor":"transparent","borderColor":"transparent"},"model00000169d92e400d_00000000":{"id":"model00000169d92e400d_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Top 10 de cliente con alta tasa de riesgo de siniestralidad</span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model00000169d9360c65_00000003":{"id":"model00000169d9360c65_00000003","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model00000169d9360c65_00000000","itemId":"Promedio_de_Velocidad_Km_h","itemLabel":"Promedio de Velocidad (Km/h)","aggregate":"avg"}],"id":"model00000169d9360c65_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model00000169d9360c65_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"borderColor":"transparent"},"model0000016a029e5dff_00000000":{"id":"model0000016a029e5dff_00000000","data":{"dataViews":[{"modelRef":"model00000169d8cbc286_00000002","dataItems":[{"id":"model0000016a029e8360_00000000","itemId":"Data_Transport_Sensor_v3_2.Cliente","itemLabel":"Cliente"},{"id":"model0000016a029fb40f_00000000","itemId":"Data_Transport_Sensor_v3_2.Uso_teléfono","itemLabel":"Uso del teléfono (%)","aggregate":"avg"},{"id":"model0000016a029fc157_00000000","itemId":"Data_Transport_Sensor_v3_2.Eficiencia","itemLabel":"Eficiencia (%)","aggregate":"avg"},{"id":"model0000016a02a069a9_00000000","itemId":"Data_Transport_Sensor_v3_2.Anticipación","itemLabel":"Anticipación (%)","aggregate":"avg"},{"id":"model0000016a02a0767b_00000000","itemId":"Data_Transport_Sensor_v3_2.Legalidad","itemLabel":"Legalidad (%)","aggregate":"avg"},{"id":"model0000016a126b58d2_00000000","itemId":"Porcentaje_de_Riesgo","itemLabel":"Porcentaje de Riesgo (%)","selection":[{"operation":"keep","topBottom":{"type":"topcount","value":10,"rank":true}},{"operation":"order","sort":{"type":"desc","priority":null,"by":"caption"}}],"aggregate":"avg"}],"id":"model0000016a029e835f_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"rank","dataItems":["model0000016a126b58d2_00000000"],"id":"rank"},{"name":"grid_cols","dataItems":["model0000016a029e8360_00000000","model0000016a029fb40f_00000000","model0000016a029fc157_00000000","model0000016a02a069a9_00000000","model0000016a02a0767b_00000000","model0000016a126b58d2_00000000"],"caption":"Columns","id":"grid_cols"}]},"type":"live","visId":"JQGrid","name":{"translationTable":{"Default":"Top de cliente con alto porcentaje de riesgo"}},"fillColor":"transparent","localFilters":[],"showTitle":false,"properties":[{"id":"condColorPalette","value":"condColorPalette0"},{"id":"hideSummaries","value":true},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}],"queryRefresh":{"autoRefresh":false,"unit":"seconds","value":5},"borderColor":"transparent"},"model0000016a02b98d50_00000001":{"id":"model0000016a02b98d50_00000001","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model0000016a02b98d4f_00000000","itemId":"Uso_de_Transporte_Público","itemLabel":"Uso de Transporte Público (%) ","aggregate":"avg"}],"id":"model0000016a02b98d4f_00000001"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model0000016a02b98d4f_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a02b9cc34_00000001":{"id":"model0000016a02b9cc34_00000001","data":{"dataViews":[{"modelRef":"model00000169d8cb4149_00000002","dataItems":[{"id":"model0000016a02b9cc32_00000000","itemId":"Uso_del_vehículo","itemLabel":"Uso del vehículo (%) ","aggregate":"avg"}],"id":"model0000016a02b9cc33_00000000"}]},"slotmapping":{"slots":[{"name":"values","dataItems":["model0000016a02b9cc32_00000000"],"dataItemSettings":[],"caption":"Value","id":"values","layerId":"data"}]},"type":"live","name":{"translationTable":{}},"localFilters":[],"visId":"summary","fillColor":"transparent","borderColor":"transparent","properties":[{"id":"colorPalette","value":"colorPalette4"},{"id":"valueColor","value":2},{"id":"showItemLabel","value":false},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a07a82704_00000000":{"id":"model0000016a07a82704_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Mapa de riesgo por provincia</span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07b1f944_00000000":{"id":"model0000016a07b1f944_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize12\"><span class=\"rt_fontSize11\">Eficienci</span><span class=\"rt_fontSize11\">a (%)</span></span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07b8bfe6_00000000":{"id":"model0000016a07b8bfe6_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize12\"><span class=\"rt_fontSize11\">&nbsp; Uso del Telefóno </span><span class=\"rt_fontSize11\">(%)</span></span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07bcb523_00000000":{"id":"model0000016a07bcb523_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize12\"><span class=\"rt_fontSize11\">Anticipación </span><span class=\"rt_fontSize11\">(%)</span></span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07bd5911_00000000":{"id":"model0000016a07bd5911_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize12\"><span class=\"rt_fontSize11\">Legalidad </span><span class=\"rt_fontSize11\">(%)</span></span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07c04e85_00000000":{"id":"model0000016a07c04e85_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14 color1\"><span class=\"rt_fontSize12\"><span class=\"rt_fontSize11\">Velocidad&nbsp; </span><span class=\"rt_fontSize11\">(Km/h)</span></span><br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07d966b3_00000000":{"id":"model0000016a07d966b3_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent fill-transparent border-transparent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14\"><span class=\"color1\"><span class=\"rt_fontSize11\">Transporte público (%)</span><br></span><span class=\"color1\"></span></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":"","fillColor":"transparent","borderColor":"transparent"},"model0000016a07dbc29c_00000000":{"id":"model0000016a07dbc29c_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent fill-transparent border-transparent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14\"><span class=\"color1\"><span class=\"rt_fontSize11\">Uso de Bicicleta (%)</span><br></span><span class=\"color1\"></span></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":"","fillColor":"transparent","borderColor":"transparent"},"model0000016a07dca7e8_00000000":{"id":"model0000016a07dca7e8_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent fill-transparent border-transparent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14\"><span class=\"color1\"><span class=\"rt_fontSize11\">Uso de Vehículo (%)</span><br></span><span class=\"color1\"></span></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":"","fillColor":"transparent","borderColor":"transparent"},"model0000016a07dd3cc7_00000000":{"id":"model0000016a07dd3cc7_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent fill-transparent border-transparent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular rt_fontSize14\"><span class=\"color1\"><span class=\"rt_fontSize11\">Caminando (%)</span><br></span><span class=\"color1\"></span></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":"","fillColor":"transparent","borderColor":"transparent"},"model0000016a07dea05c_00000000":{"id":"model0000016a07dea05c_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Comparativo por grupos de clientes <br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a07e4634a_00000000":{"id":"model0000016a07e4634a_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Comparación del estado de sentimiento vs patrón de conducción<br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a0d716e0c_00000000":{"id":"model0000016a0d716e0c_00000000","type":"image","imageLink":"http://analyticar-sbg.mybluemix.net/static/img/Analysticar.png","altText":{"translationTable":{}},"visTypeLocked":true,"name":""},"model0000016a11d94eaf_00000000":{"id":"model0000016a11d94eaf_00000000","data":{"dataViews":[{"modelRef":"model00000169d91899cc_00000002","dataItems":[{"id":"model0000016a11d9fb8d_00000000","itemId":"Data_Transport_Sensor_v1.Tipo_de_música","itemLabel":"Tipo de música"},{"id":"model0000016a11da215f_00000001","itemId":"Data_Transport_Sensor_v1.Número_de_casos","itemLabel":"Número de casos"}],"id":"model0000016a11d9fb8c_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"categories","dataItems":["model0000016a11d9fb8d_00000000"],"dataItemSettings":[],"caption":"Segments","id":"categories"},{"name":"values","dataItems":["model0000016a11da215f_00000001"],"caption":"Size","id":"values"}]},"type":"live","visId":"com.ibm.vis.rave2bundlepie","name":{"translationTable":{}},"fillColor":"transparent","borderColor":"transparent","properties":[{"id":"labels.visible","value":true},{"id":"colorPalette","value":"colorPalette4"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a126d8556_00000000":{"id":"model0000016a126d8556_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Top de género de música más escuchado <br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":""},"model0000016a12748572_00000000":{"id":"model0000016a12748572_00000000","data":{"dataViews":[{"modelRef":"model00000169d91899cc_00000002","dataItems":[{"id":"model0000016a1274b67f_00000001","itemId":"Data_Transport_Sensor_v1.Tono_de_voz_1","itemLabel":"Tono de voz %","aggregate":"avg"},{"id":"model0000016a1274cb57_00000001","itemId":"Data_Transport_Sensor_v1.Estado_de_sentimiento","itemLabel":"Estado de sentimiento del conductor"}],"id":"model0000016a1274b67f_00000000"}]},"visTypeLocked":true,"slotmapping":{"slots":[{"name":"values","dataItems":["model0000016a1274b67f_00000001"],"caption":"y-axis","id":"values"},{"name":"categories","dataItems":["model0000016a1274cb57_00000001"],"dataItemSettings":[],"caption":"x-axis","id":"categories"}]},"type":"live","visId":"com.ibm.vis.rave2line","name":{"translationTable":{}},"fillColor":"transparent","borderColor":"transparent","localFilters":[],"properties":[{"id":"gridLines.visible","value":false},{"id":"lines.smooth","value":true},{"id":"markers.visible","value":false},{"id":"axisLabelColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"colorPalette","value":"colorPalette4"},{"id":"axisTitleFontColor","value":{"a":0.6,"r":255,"g":255,"b":255}},{"id":"legendTitleColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"legendBodyColor","value":{"a":0.5,"r":255,"g":255,"b":255}},{"id":"axisLineColor","value":{"a":0.25,"r":255,"g":255,"b":255}},{"id":"axisGridLineColor","value":{"a":0.05,"r":255,"g":255,"b":255}},{"id":"elementsLabelColor","value":{"a":0.6,"r":255,"g":255,"b":255}}]},"model0000016a127a34f9_00000000":{"id":"model0000016a127a34f9_00000000","type":"text","content":{"translationTable":{"Default":"<div class=\"staticContent fill-transparent\" dir=\"auto\"><div class=\"summernote\" style=\"display: none;\"></div><div class=\"note-editor\"><div class=\"note-dropzone\">  <div class=\"note-dropzone-message\"></div></div><div class=\"note-editing-area\"><div class=\"note-handle\"><div class=\"note-control-selection\"><div class=\"note-control-selection-bg\"></div><div class=\"note-control-holder note-control-nw\"></div><div class=\"note-control-holder note-control-ne\"></div><div class=\"note-control-holder note-control-sw\"></div><div class=\"note-control-sizing note-control-se\"></div><div class=\"note-control-selection-info\"></div></div></div><div class=\"note-editable\" contenteditable=\"false\"><p class=\"responsiveColor responsiveFontSize responsiveFontFamily\" style=\"\"><span class=\"rt_fontFamilyMontserrat-Regular color1 rt_fontSize16\">Tono de voz para cada estado de sentimiento<br></span></p></div></div></div></div>"}},"isResponsive":false,"visTypeLocked":true,"name":"","fillColor":"transparent"},"model0000016a2c8774d7_00000000":{"id":"model0000016a2c8774d7_00000000","type":"image","imageLink":"http://analyticar-sbg.mybluemix.net/static/img/Analysticar.png","altText":{"translationTable":{}},"visTypeLocked":true,"name":""},"model0000016a2c88634f_00000000":{"id":"model0000016a2c88634f_00000000","type":"image","imageLink":"http://analyticar-sbg.mybluemix.net/static/img/Analysticar.png","altText":{"translationTable":{}},"visTypeLocked":true,"name":""}}}}).then(    function(dashboardAPI) {        console.log('Dashboard created successfully.');        window.dashboardAPI = dashboardAPI;    }).catch(    function(err) {        console.log(err);    });
+    }
+    $(document).ready( function() {
+      prueba();
+    });
+
+
+    function getNewAPIScript() {
+      return '' +
+        'window.api = new CognosApi({' +
+        '<br>' + tab + 'cognosRootURL: \'' + "https://dde-us-south.analytics.ibm.com" + '/daas/\',' +
+        '<br>' + tab + 'sessionCode: \'' + (sessionObj ? sessionObj.sessionCode : '{{sessionCode}}') + '\',' +
+        '<br>' + tab + 'language: \'' + 'en' + '\',' +
+        '<br>' + tab + 'node: document.getElementById(\'containerDivId\')' +
+        '<br>' + '});' +
+        '<br>' + 'window.api.initialize().then(function() {' +
+        '<br>' + tab + 'console.log(\'API created successfully.\');' +
+        '<br>}, function(err) {' +
+        '<br>' + tab + 'console.log(\'Failed to create API. \' + err.message);' +
+        '<br>});';
+    }
+
+    function getOnErrorScript() {
+      return 'window.onError = function(event) {' +
+        '<br>' + tab + 'console.log(\'onError:\' + JSON.stringify(event));' +
+        '<br>' + '};' +
+        '<br>' + 'window.api.on(CognosApi.EVENTS.REQUEST_ERROR, window.onError);';
+    }
+
+    function getOffErrorScript() {
+      return 'window.api.off(CognosApi.EVENTS.REQUEST_ERROR, window.onError);';
+    }
+
+    function getCloseAPIScript() {
+      return '' +
+        'window.api.close().then(function() {' +
+        '<br>' + tab + 'console.log(\'API closed successfully.\')' +
+        '<br>});';
+
+    }
+
+    function getUpdateModuleDefinitionsScript() {
+      return '' +
+        '/* Clone our test spec since we don\'t want this example to change it */' +
+        '<br>' + 'var dbSpec = JSON.parse(JSON.stringify(sampleSpec));' +
+        '<br>' +
+        '<br>' + 'var getNewModulesCallback = function(ids) {' +
+        '<br>' + tab + 'var newModules = [];' +
+        '<br>' + tab + 'ids.forEach(function(id) {' +
+        '<br>' + tab + tab + 'newModules.push({' +
+        '<br>' + tab + tab + tab + 'id: id,' +
+        '<br>' + tab + tab + tab + 'module: {' +
+        '<br>' + tab + tab + tab + tab + 'newModuleDefinition: true' +
+        '<br>' + tab + tab + tab + '},' +
+        '<br>' + tab + tab + tab + 'name: \'newModuleName\',' +
+        '<br>' + tab + tab + '});' +
+        '<br>' + tab + '});' +
+        '<br>' + tab + 'return Promise.resolve(newModules);' +
+        '<br>' + '};  ' +
+        '<br>' +
+        '<br>' + '/* Log the before */' +
+        '<br>' + 'console.log(dbSpec.dataSources.sources);' +
+        '<br>' +
+        '<br>' + 'window.api.updateModuleDefinitions(dbSpec, getNewModulesCallback).then(function(newDBSpec) {' +
+        '<br>' + tab + 'console.log(newDBSpec.dataSources.sources);' +
+        '<br>' + '});';
+    }
+
+    function getNewDashboardScript() {
+      return 'window.api.dashboard.createNew().then(' +
+        '<br>' + tab + 'function(dashboardAPI) {' +
+        '<br>' + tab + tab + 'console.log(\'Dashboard created successfully.\');' +
+        '<br>' + tab + tab + 'window.dashboardAPI = dashboardAPI;' +
+        '<br>' + tab + '}' +
+        '<br>' + ').catch(' +
+        '<br>' + tab + 'function(err) {' +
+        '<br>' + tab + tab + 'console.log(\'User hit cancel on the template picker page.\');' +
+        '<br>' + tab + '}' +
+        '<br>);'
+    }
+
+
+    function getOpenDashboardScript() {
+      return 'window.api.dashboard.openDashboard({' +
+        '<br>' + tab + 'dashboardSpec: sampleSpec' +
+        '<br>}).then(' +
+        '<br>' + tab + 'function(dashboardAPI) {' +
+        '<br>' + tab + tab + 'console.log(\'Dashboard created successfully.\');' +
+        '<br>' + tab + tab + 'window.dashboardAPI = dashboardAPI;' +
+        '<br>' + tab + '}' +
+        '<br>' + ').catch(' +
+        '<br>' + tab + 'function(err) {' +
+        '<br>' + tab + tab + 'console.log(err);' +
+        '<br>' + tab + '}' +
+        '<br>);'
+    }
+
+
+    function getAddSourcesScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleBikeShareRidesDemographModule,' +
+        '<br>' + tab + 'name: \'Data_Transport_Sensor_v2\',' +
+        '<br>' + tab + 'id: \'myUniqueId221\'' +
+        '<br>}])';
+    }
+
+    function getAddSampleScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleBike,' +
+        '<br>' + tab + 'name: \'Data_Transport_Sensor_v3_1\',' +
+        '<br>' + tab + 'id: \'myUniqueId222\'' +
+        '<br>}])';
+    }
+
+
+    function getAddDemographModuleScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: DemographModule,' +
+        '<br>' + tab + 'name: \'sampleBikeShareRidesDemographModule\',' +
+        '<br>' + tab + 'id: \'myUniqueId223\'' +
+        '<br>}])';
+    }
+
+
+    function getAddProtectedSourcesScript() {
+      return '' +
+        'var protectedSampleModule = getProtectedSampleModule();' +
+        '<br>' + 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: protectedSampleModule,' +
+        '<br>' + tab + 'name: \'Protected Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId456\'' +
+        '<br>' + '}])';
+    }
+
+    function getAddCSVSourcesScript() {
+      return 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: sampleCSVModule,' +
+        '<br>' + tab + 'name: \'Test CSV Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId789\'' +
+        '<br>}])';
+    }
+
+    function getAddProtectedCSVSourcesScript() {
+      return '' +
+        'var protectedSampleModule = getProtectedSampleCSVModule();' +
+        '<br>' + 'dashboardAPI.addSources([{' +
+        '<br>' + tab + 'module: protectedSampleModule,' +
+        '<br>' + tab + 'name: \'Protected CSV Source\',' +
+        '<br>' + tab + 'id: \'myUniqueId987\'' +
+        '<br>' + '}]);';
+    }
+
+    function getSetModeScript() {
+      return '/**' +
+        '<br>Available modes' +
+        '<br>dashboardAPI.MODES.EDIT (authoring mode)' +
+        '<br>dashboardAPI.MODES.VIEW (consumption mode)' +
+        '<br>dashboardAPI.MODES.EDIT_GROUP (event group mode)' +
+        '<br>*/' +
+        '<br><br>dashboardAPI.setMode(dashboardAPI.MODES.EDIT);';
+    }
+
+    function getUndoScript() {
+      return 'dashboardAPI.undo();';
+    }
+
+    function getRedoScript() {
+      return 'dashboardAPI.redo();';
+    }
+
+    function getGetSpecScript() {
+      return 'dashboardAPI.getSpec().then(function(spec){' +
+        '<br>' + tab + 'console.log(JSON.stringify(spec));' +
+        '<br>' + '});';
+    }
+
+    function getClearDirtyScript() {
+      return 'dashboardAPI.clearDirty();';
+    }
+
+    function getTogglePropertiesScript() {
+      return 'dashboardAPI.toggleProperties();';
+    }
+
+    function getOnEventScript() {
+      return 'window.onDirty = function(event) {' +
+        '<br>' + tab + 'console.log(\'onDirty:\' + JSON.stringify(event));' +
+        '<br>' + '};' +
+        '<br>' + 'dashboardAPI.on(dashboardAPI.EVENTS.DIRTY, window.onDirty);';
+    }
+
+    function getOffEventScript() {
+      return 'dashboardAPI.off(dashboardAPI.EVENTS.DIRTY, window.onDirty);';
+    }
+
+    function setActionScript() {
+      var selectedValue = document.getElementById('action').value;
+      var fn = window['get' + selectedValue + 'Script'];
+      var script = fn();
+      document.getElementById('actionScript').innerHTML = script;
+      console.log(selectedValue)
+      console.log(fn)
+    }
+
+    function _createSession(client_id, client_secret, payload) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "v1/session", true);
+      xhttp.setRequestHeader('Authorization', 'Basic ' + btoa(client_id + ':' + client_secret));
+      xhttp.setRequestHeader('Content-Type', 'application/json');
+
+      return new Promise(function(resolve, reject) {
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 201) {
+              resolve(JSON.parse(this.responseText));
+            } else {
+              reject(new Error(this.statusText));
+            }
+          }
+        };
+        xhttp.send(JSON.stringify(payload));
+      });
+    }
+
+    function getProtectedSampleModule() {
+      return this._encryptModuleInfo(sampleModule);
+    }
+
+    function getProtectedSampleCSVModule() {
+      return this._encryptModuleInfo(sampleCSVModule);
+    }
+
+    function _encryptModuleInfo(module) {
+      var sampleProtectedModule = JSON.parse(JSON.stringify(module));
+      return this._encryptObject(sampleProtectedModule);
+    }
+
+    function _encryptObject(obj, name) {
+      Object.keys(obj).forEach(function(key) {
+        var fullKey = name ? name + '.' + key : key;
+        if (typeof obj[key] === 'object') {
+          // encrypt the child object
+          this._encryptObject(obj[key], fullKey);
+        } else if (validPropertiesToEncrypt.indexOf(fullKey) !== -1) {
+          obj[key] = this._encryptValue(obj[key]);
+        }
+      });
+      return obj;
+    }
+
+    function _encryptValue(value) {
+      var keyObj = KEYUTIL.getKey(sessionObj.keys[0]);
+      var hex = KJUR.crypto.Cipher.encrypt(value, keyObj);
+
+      return '{enc}' + hextob64(hex);
+    }
+
+    function deleteSession(client_id, client_secret) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("DELETE", "v1/session", true);
+      xhttp.setRequestHeader('Authorization', 'Basic ' + btoa(client_id + ':' + client_secret));
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            resolve(JSON.parse(this.responseText));
+          } else {
+            reject();
+          }
+        }
+      };
+      xhttp.send();
+    }
+
+    function newSession(username, password, payload) {
+      var containerDiv = document.getElementById('containerDivId');
+
+      _createSession(username, password, payload).then(function(session) {
+        sessionObj = session;
+
+        window.onbeforeunload = function() {
+          deleteSession(username, password);
+        }
+        containerDiv.innerHTML = '<h2>Session information</h2><pre>' + JSON.stringify(sessionObj, undefined, 4) + '</pre>';
+      }, function(err) {
+        sessionObj = null;
+        containerDiv.innerHTML = '<h2>Failed to create session</h2>Please check your application credentials.';
+      });
+    }
+  </script>
+
+  <style>
+
+    option:disabled {
+      color: #00669E;
+      font-weight: bolder;
+    }
+
+    .leftPanel {
+      height: 100%;
+      width: 400px;
+      background-color: #d0d2d3;
+      float: left;
+      position: relative;
+      box-shadow: 5px 5px 10px #264A60;
+      border: 2px solid #3C4646;
+      margin: 2px 10px 2px 2px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .leftPanel>div {
+      padding: 10px;
+    }
+
+    .select {
+      color: #3D4852;
+      font-weight: bold;
+    }
+
+    .select>select {
+      width: 100%;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border: 2px solid #264A60;
+      font-size: 14px;
+      padding: 2px;
+    }
+
+    .input {
+      font-size: 12px;
+      font-family: monospace;
+      height: 100%;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      border: 2px solid #264A60;
+      background-color: white;
+      margin: 10px;
+      overflow-y: auto;
+    }
+
+    .group {
+      padding: 10px;
+    }
+
+/*    .button {
+      background-color: #00669E;
+      color: white;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      bottom: 10px;
+      right: 10px;
+      box-shadow: 3px 3px 10px #264A60;
+      cursor: hand;
+      border-radius: 10px;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      border: 2px solid #264A60;
+      float: right;
+    }*/
+
+    .iframeContainer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .iframeContainer pre {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 20px;
+    }
+  </style>
+
+  <main class="main-content" style="width:100%;height:100% !important">
+  
+  <div class="container">
+
+  <body onload="setActionScript();" >
+<!--   <div class="leftPanel">
+    <div class="select">
+      <select id="action" onchange="setActionScript()">
+        <option disabled>API Framework</option>
+        <option value="NewSession" select='true'>Create a session for the API</option>
+        <option value="NewAPI">Create and initialize the API framework</option>
+        <option value="OnError">Register a callback to handle API events</options>
+        <option value="OffError">Unregister a API event callback</options>
+        <option value="CloseAPI">Close the API framework</option>
+        <option value="UpdateModuleDefinitions">Update module definitions</option>
+        <option disabled></option>
+        <option disabled>Invoke DashboardFactory</option>
+        <option value="NewDashboard">Create new dashboard</option>
+        <option value="OpenDashboard">Open dashboard</option>
+        <option disabled></option>
+        <option disabled>Invoke DashboardAPI</option>
+        <option value="AddSources">Add sources to dashboard</option>
+        <option value="AddSample">Add sources to parte 2</option>
+        <option value="AddDemographModule">Add siniestralidad to parte 3</option>
+        <option value="AddProtectedSources">Add protected sample source</option>
+        <option value="AddCSVSources">Add sample CSV source</option>
+        <option value="AddProtectedCSVSources">Add protected sample CSV source</option>
+        <option value="SetMode">Set dashboard mode</option>
+        <option value="Undo">Undo the last action</option>
+        <option value="Redo">Redo the last undone action</option>
+        <option value="GetSpec">Get the dashboard spec</option>
+        <option value="ClearDirty">Clear the dashboard dirty state</option>
+        <option value="ToggleProperties">Toggle the properties pane</option>
+        <option value="OnEvent">Register a callback to handle dashboard events</option>
+        <option value="OffEvent">Unregister a event callback</option>
+      </select>
+    </div>
+    <div class="input" contenteditable="true" id="actionScript">
+    </div>
+    <div>
+      <button type="submit" class="button" onclick="execute()">Execute</button>
+    </div>
+  </div> -->
+  
+</body>
+  </div>
+<div class="" style="height:1050px;">
+  <div class="iframeContainer" id="containerDivId"></div>
+</div>
+</main>
+
+
+{% endblock content %}

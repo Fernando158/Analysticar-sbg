@@ -18,11 +18,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'compose',                                   # Or path to database file if using sqlite3.
-        'USER': 'admin',                                     # Not used with sqlite3.
-        'PASSWORD': 'UJUKXXTRGJDPDQBH',                      # Not used with sqlite3.
-        'HOST': 'sl-us-south-1-portal.39.dblayer.com',       # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '62926',                                     # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'ibmclouddb',                                   # Or path to database file if using sqlite3.
+        'USER': 'ibm_cloud_d2bc9c2b_1364_4764_93df_cc369faec116',                                     # Not used with sqlite3.
+        'PASSWORD': '695c7878f51ddc5efceaf683db523a9cc739074ed14516c8b3f6f5061f762ecc',                      # Not used with sqlite3.
+        'HOST': '500aaa93-4b2a-4c61-92b5-d4d5932aadb0.0135ec03d5bf43b196433793c98e8bd5.databases.appdomain.cloud',       # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '31481',                                     # Set to empty string for default. Not used with sqlite3.
     }
 }
 # Quick-start development settings - unsuitable for production
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'analysticar-django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +81,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'analysticar-django.wsgi.application'
 
+
+AUTH_USER_MODEL = 'analysticar.User'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -124,9 +126,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(PROJECT_ROOT, 'static'),
+# )
 
 LOGGING = {
      'version': 1,

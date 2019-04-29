@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+	.ui-widget-content {
+		background: white !important
+	}
+</style>
+<main class="main-content">
+	
+	<div class="container" style="margin: 3%;margin-left:20%">
+			<div class="col-sm-9">
+				<div role="tabapanel" class="tab-pane active" id="registro">
+					<h1 style="text-align:center;">Registro de usuario</h1>
+					<hr>
+					<form method="POST" encType="multipart/form-data" name="formReporte">
+						{% csrf_token %}
+
+						{% if msg %}
+							<h5 style={{color | safe}}>{{ msg }}</h5><br>
+						{% endif %}
+
+						<div class="row">
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.ident.label_tag}}<br>
+				              {{form.ident}}
+				              {%if form.ident.errors %}
+				          	  <div style="color:red">
+				              	{{form.ident.errors}}
+				              </div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.email.label_tag}}<br>
+				              {{form.email}}
+				              {%if form.email.errors %}
+				          	  <div style="color:red">
+				              	{{form.email.errors}}
+				              </div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="row">
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.password1.label_tag}}<br>
+				              {{form.password1}}
+				              {%if form.password1.errors %}
+				              	<div style="color:red">
+				              		{{form.password1.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.password2.label_tag}}<br>
+				              {{form.password2}}
+				              {%if form.password2.errors %}
+				              	<div style="color:red">
+				              		{{form.password2.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.first_name.label_tag}}<br>
+				              {{form.first_name}}
+				              {%if form.first_name.errors %}
+				              	<div style="color:red">
+				              		{{form.first_name.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.last_name.label_tag}}<br>
+				              {{form.last_name}}
+				              {%if form.last_name.errors %}
+				              	<div style="color:red">
+				              		{{form.last_name.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.municipio.label_tag}}<br>
+				              {{form.municipio}}
+				                {%if form.municipio.errors %}
+				              	<div style="color:red">
+				              		{{form.municipio.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				             {{form.urbanizacion.label_tag}}<br>
+				              {{form.urbanizacion}}
+				              {%if form.urbanizacion.errors %}
+				              <div style="color:red">
+				              	{{form.urbanizacion.errors}}
+				              </div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="col-md-13 col-sm-13 col-xs-13">
+				            {{form.direccion.label_tag}}<br>
+				            {{form.direccion}}
+				            {%if form.direccion.errors %}
+				              	<div style="color:red">
+				              	{{form.direccion.errors}}
+				              	</div>
+				              {% endif %}
+				          </div>
+				          <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.telefono.label_tag}}<br>
+				              {{form.telefono}}
+				              {%if form.telefono.errors %}
+				              <div style="color:red">
+				              	{{form.telefono.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				             {{form.fechaNac.label_tag}}<br>
+				              {{form.fechaNac}}
+				              {%if form.fechaNac.errors %}
+				              <div style="color:red">
+				              	{{form.fechaNac.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.estadoCivil.label_tag}}<br>
+				              {{form.estadoCivil}}
+				              {%if form.estadoCivil.errors %}
+				              	<div style="color:red">
+				              	{{form.estadoCivil.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				            <div class="col-md-6 col-sm-12 col-xs-12">
+				             {{form.pareja.label_tag}}<br>
+				              {{form.pareja}}
+				              {%if form.pareja.errors %}
+				            <div style="color:red">
+				              	{{form.pareja.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <div class="row">
+				              <div class="col-md-6 col-sm-12 col-xs-12">
+				              {{form.hijos.label_tag}}<br>
+				              {{form.hijos}}
+				              {%if form.hijos.errors %}
+				           <div style="color:red">
+				              	{{form.hijos.errors}}
+				              	</div>
+				              {% endif %}
+				            </div>
+				          </div>
+				          <br>
+				         <div class="col-md-6 col-md-offset-5">
+						<button class="btn btn-primary" type="submit" >Registrarse</button><br><br>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('#id_fechaNac').datepicker({
+      	language: "es",
+          format: "dd/mm/yyyy",
+          endDate: "sysdate",
+          startView: 2,
+          });
+      });
+$("#id_urbanizacion").html("<option value='' selected='selected'>---------</option>");
+    $(document).ready(function() {
+        $("#id_municipio").on("change", getUrbanizacion);
+    });
+
+    function getUrbanizacion() {
+        var municipioId = $("#id_municipio").val();
+        if (municipioId) {
+            // Eliminamos las opciones anteriores del select
+            $("#id_urbanizacion").html("");
+            var request = $.ajax({
+                type: "GET",
+                url: "{% url 'get_urbanizacion' %}",
+                data: {
+                    "municipio_id": municipioId,
+                },
+            });
+            request.done(function(response) {
+                // Agregamos los resultados al select
+                $("#id_proceso").html(response.urbanizacion);
+                $("#id_urbanizacion").html(response.urbanizacion);
+                console.log(response.urbanizacion)
+            });
+
+        } else {
+            $("#id_urbanizacion").html("<option value='' selected='selected'>---------</option>");
+            $("#id_urbanizacion").trigger("change");
+            console.log('Hola')
+        }
+    }    
+  </script>
+  {%endblock content%}

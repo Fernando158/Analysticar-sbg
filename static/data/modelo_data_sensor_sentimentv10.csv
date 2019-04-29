@@ -1,0 +1,139 @@
+Cliente,fecha,Porcentaje_de_Conversación_%,Porcentaje_de_Conversación,Tono_de_voz,Tono_de_voz_%,Tipo_de_música,Estado_de_sentimiento,Patrón_de_conducción,Número_de_casos
+Fernando Salas,02/01/2018,0.24,24,Alto,64,Electronica,Felicidad,Moderado,1
+Gustavo López ,03/01/2018,0.48,48,Medio,75,Rock,Ira,Riesgoso,1
+Maria Molina,04/01/2018,0.4,40,Bajo,20,Blues,Tristeza,Seguro,1
+Jairo Jimenez,05/01/2018,0.45,45,Bajo,10,no escucha música,Miedo,Moderado,1
+Daniel Macias,06/01/2018,0.25,25,Alto,43,Rock,Normal,Moderado,1
+ Elena Chacon ,07/01/2018,0.27,27,Alto,45,pop,Felicidad,Moderado,1
+Carlos Paredes ,02/01/2018,0.24,24,Medio,36,no escucha música,Tristeza,Moderado,1
+Mario Solis ,03/01/2018,0.23,23,Medio,70,no escucha música,Tristeza,Riesgoso,1
+Valentina Carvache,04/01/2018,0.32,32,Medio,65,Rock,Ira,Riesgoso,1
+Alberto Matos ,05/01/2018,0.19,19,Medio,39,pop,Felicidad,Moderado,1
+Angelica Robles,06/01/2018,0.36,36,Alto,80,Electronica,Ira,Riesgoso,1
+Javier Molina ,07/01/2018,0.32,32,Alto,45,Electronica,Tristeza,Riesgoso,1
+Mercy Masache  ,02/01/2018,0.24,24,Alto,52,Electronica,Normal,Seguro,1
+Manuel Moa ,03/01/2018,0.48,48,Bajo,68,Rock,Ira,Riesgoso,1
+Enrique Roldan,04/01/2018,0.4,40,Alto,50,Blues,Tristeza,Seguro,1
+Karina Velazco ,05/01/2018,0.45,45,Alto,60,no escucha música,Miedo,Moderado,1
+David Garnica  ,06/01/2018,0.25,25,Alto,63,Rock,Normal,Seguro,1
+Xavier  Alfonso ,04/01/2018,0.32,32,Medio,70,Rock,Ira,Riesgoso,1
+ Jose Diaz,05/01/2018,0.19,19,Bajo,49,pop,Ira,Moderado,1
+Carlos Maldonado,05/01/2018,0.45,45,Alto,70,no escucha música,Miedo,Riesgoso,1
+Alfredo Dominguez ,06/01/2018,0.25,25,Alto,38,Rock,Normal,Moderado,1
+Jose  Zavala,04/01/2018,0.32,32,Medio,65,Rock,Ira,Riesgoso,1
+Javier Hermenegildo ,05/01/2018,0.19,19,Medio,68,pop,Ira,Moderado,1
+Ivan Vazcone el pozo,06/01/2018,0.36,36,Alto,80,Electronica,Ira,Riesgoso,1
+Hernandez Mujica,07/01/2018,0.4,40,Bajo,10,Blues,Tristeza,Riesgoso,1
+Ernesto Perez,02/01/2018,0.25,25,Alto,28,Rock,Normal,Seguro,1
+Ramiro Robles,03/01/2018,0.32,32,Medio,78,Rock,Ira,Riesgoso,1
+Elizabeth Chicaiza,02/01/2018,0.19,19,Bajo,79,pop,Ira,Moderado,1
+Angel Castro,02/01/2018,0.4,40,Bajo,10,Blues,Tristeza,Seguro,1
+Alexandra Sornoza,02/01/2018,0.45,45,Alto,55,no escucha música,Miedo,Moderado,1
+Gabriela Sandoval,03/01/2018,0.25,25,Alto,41,Rock,Normal,Moderado,1
+Patricio Caviedez,04/01/2018,0.32,32,Medio,80,Rock,Ira,Seguro,1
+Rodrigo Chillogalli ,05/01/2018,0.19,19,Medio,70,pop,Ira,Moderado,1
+Mariana Muñoz ,06/01/2018,0.36,36,Alto,82,Electronica,Ira,Riesgoso,1
+Luis  Moreira,06/01/2018,0.25,25,Alto,34,Rock,Normal,Seguro,1
+Marlon Cepeda,07/01/2018,0.32,32,Medio,72,Rock,Ira,Seguro,1
+Cristina Peñaranda ,02/01/2018,0.19,19,Bajo,77,pop,Ira,Moderado,1
+Marcela de jesus Ochoa,06/01/2018,0.32,32,Medio,83,Rock,Ira,Riesgoso,1
+Carolina Velecela,07/01/2018,0.19,19,Medio,78,pop,Ira,Moderado,1
+Mariana Molina,02/01/2018,0.36,36,Alto,70,Electronica,Ira,Riesgoso,1
+Pedro Gaibor,02/01/2018,0.45,45,Alto,75,no escucha música,Miedo,Moderado,1
+Eduardo Robles,06/01/2018,0.25,25,Alto,44,Rock,Normal,Moderado,1
+Santiago Jara,07/01/2018,0.45,45,Bajo,10,no escucha música,Miedo,Moderado,1
+Jesus Minchala,02/01/2018,0.45,45,Bajo,20,no escucha música,Miedo,Moderado,1
+Manuel Lojano,03/01/2018,0.45,45,Alto,70,no escucha música,Miedo,Moderado,1
+Paul Chamba,03/01/2018,0.25,25,Alto,55,Rock,Normal,Seguro,1
+Fernando Salas,02/02/2018,0.45,45,Alto,65,no escucha música,Miedo,Seguro,1
+Gustavo López ,03/02/2018,0.25,25,Alto,80,Rock,Normal,Moderado,1
+Maria Molina,04/02/2018,0.45,45,Bajo,10,no escucha música,Miedo,Moderado,1
+Jairo Jimenez,05/02/2018,0.45,45,Bajo,20,no escucha música,Miedo,Moderado,1
+Daniel Macias,06/02/2018,0.45,45,Alto,55,no escucha música,Miedo,Moderado,1
+ Elena Chacon ,07/02/2018,0.25,25,Alto,65,Rock,Normal,Moderado,1
+Carlos Paredes ,02/02/2018,0.32,32,Medio,69,Rock,Ira,Seguro,1
+Mario Solis ,03/02/2018,0.23,23,Medio,45,no escucha música,Tristeza,Riesgoso,1
+Valentina Carvache,04/02/2018,0.32,32,Medio,67,Rock,Ira,Seguro,1
+Alberto Matos ,05/02/2018,0.19,19,Medio,42,pop,Felicidad,Moderado,1
+Angelica Robles,06/02/2018,0.36,36,Alto,80,Electronica,Ira,Riesgoso,1
+Javier Molina ,07/02/2018,0.32,32,Alto,31,Electronica,Felicidad,Riesgoso,1
+Mercy Masache  ,02/02/2018,0.24,24,Alto,44,Electronica,Normal,Seguro,1
+Manuel Moa ,03/02/2018,0.48,48,Bajo,68,Rock,Ira,Seguro,1
+Enrique Roldan,04/02/2018,0.4,40,Alto,45,Blues,Tristeza,Riesgoso,1
+Karina Velazco ,05/02/2018,0.45,45,Alto,75,no escucha música,Miedo,Moderado,1
+David Garnica  ,06/02/2018,0.25,25,Alto,51,Rock,Normal,Moderado,1
+Xavier  Alfonso ,04/02/2018,0.32,32,Medio,70,Rock,Ira,Riesgoso,1
+ Jose Diaz,05/02/2018,0.19,19,Bajo,78,pop,Ira,Moderado,1
+Carlos Maldonado,05/02/2018,0.45,45,Alto,70,no escucha música,Miedo,Riesgoso,1
+Alfredo Dominguez ,06/02/2018,0.25,25,Alto,44,Rock,Normal,Seguro,1
+Jose  Zavala,04/02/2018,0.32,32,Alto,80,Electronica,Felicidad,Seguro,1
+Javier Hermenegildo ,05/02/2018,0.24,24,Alto,55,Electronica,Normal,Moderado,1
+Ivan Vazcone el pozo,06/02/2018,0.48,48,Bajo,70,Rock,Ira,Riesgoso,1
+Hernandez Mujica,07/02/2018,0.4,40,Alto,38,Blues,Tristeza,Riesgoso,1
+Ernesto Perez,02/02/2018,0.45,45,Alto,65,no escucha música,Miedo,Moderado,1
+Ramiro Robles,03/02/2018,0.25,25,Alto,63,Rock,Normal,Moderado,1
+Elizabeth Chicaiza,02/02/2018,0.32,32,Medio,70,Rock,Felicidad,Seguro,1
+Angel Castro,02/02/2018,0.19,19,Bajo,68,pop,Ira,Moderado,1
+Alexandra Sornoza,02/02/2018,0.32,32,Medio,50,Rock,Felicidad,Seguro,1
+Gabriela Sandoval,03/02/2018,0.23,23,Medio,55,no escucha música,Tristeza,Riesgoso,1
+Patricio Caviedez,04/02/2018,0.32,32,Medio,59,Rock,Ira,Seguro,1
+Rodrigo Chillogalli ,05/02/2018,0.19,19,Medio,35,pop,Felicidad,Moderado,1
+Mariana Muñoz ,06/02/2018,0.36,36,Alto,69,Electronica,Tristeza,Riesgoso,1
+Luis  Moreira,06/02/2018,0.25,25,Alto,52,Rock,Normal,Riesgoso,1
+Marlon Cepeda,07/02/2018,0.32,32,Medio,50,Rock,Ira,Riesgoso,1
+Cristina Peñaranda ,02/02/2018,0.19,19,Bajo,75,pop,Ira,Moderado,1
+Marcela de jesus Ochoa,06/02/2018,0.32,32,Medio,67,Rock,Ira,Riesgoso,1
+Carolina Velecela,07/02/2018,0.45,45,Alto,66,no escucha música,Miedo,Moderado,1
+Mariana Molina,02/02/2018,0.25,25,Alto,65,Rock,Normal,Riesgoso,1
+Pedro Gaibor,02/02/2018,0.32,32,Medio,60,Rock,Ira,Seguro,1
+Eduardo Robles,06/02/2018,0.19,19,Medio,70,pop,Ira,Moderado,1
+Santiago Jara,07/02/2018,0.32,32,Medio,50,Rock,Ira,Riesgoso,1
+Jesus Minchala,02/02/2018,0.23,23,Medio,55,no escucha música,Tristeza,Riesgoso,1
+Manuel Lojano,03/02/2018,0.32,32,Medio,69,Rock,Felicidad,Seguro,1
+Paul Chamba,03/02/2018,0.19,19,Medio,41,pop,Felicidad,Moderado,1
+Fernando Salas,03/03/2018,0.45,45,Alto,58,no escucha música,Miedo,Moderado,1
+Gustavo López ,03/03/2018,0.25,25,Alto,32,Rock,Normal,Moderado,1
+Maria Molina,04/03/2018,0.32,32,Medio,60,Rock,Ira,Seguro,1
+Jairo Jimenez,05/03/2018,0.19,19,Medio,70,pop,Ira,Moderado,1
+Daniel Macias,06/03/2018,0.36,36,Alto,71,Electronica,Ira,Riesgoso,1
+ Elena Chacon ,07/03/2018,0.25,25,Alto,44,Rock,Normal,Seguro,1
+Carlos Paredes ,03/03/2018,0.32,32,Medio,68,Rock,Ira,Seguro,1
+Mario Solis ,03/03/2018,0.19,19,Medio,70,pop,Ira,Moderado,1
+Valentina Carvache,04/03/2018,0.32,32,Medio,74,Rock,Ira,Riesgoso,1
+Alberto Matos ,05/03/2018,0.23,23,Medio,44,no escucha música,Tristeza,Riesgoso,1
+Angelica Robles,06/03/2018,0.32,32,Medio,75,Rock,Felicidad,Seguro,1
+Javier Molina ,07/03/2018,0.32,32,Alto,37,Electronica,Felicidad,Riesgoso,1
+Mercy Masache  ,03/03/2018,0.24,24,Alto,45,Electronica,Tristeza,Riesgoso,1
+Manuel Moa ,03/03/2018,0.48,48,Bajo,75,Rock,Ira,Riesgoso,1
+Enrique Roldan,04/03/2018,0.4,40,Alto,37,Blues,Tristeza,Riesgoso,1
+Karina Velazco ,05/03/2018,0.45,45,Alto,78,no escucha música,Miedo,Moderado,1
+David Garnica  ,06/03/2018,0.25,25,Alto,44,Rock,Normal,Moderado,1
+Xavier  Alfonso ,04/03/2018,0.32,32,Medio,70,Rock,Ira,Riesgoso,1
+ Jose Diaz,05/03/2018,0.19,19,Bajo,69,pop,Ira,Moderado,1
+Carlos Maldonado,05/03/2018,0.45,45,Alto,70,no escucha música,Miedo,Riesgoso,1
+Alfredo Dominguez ,06/03/2018,0.25,25,Alto,43,Rock,Normal,Seguro,1
+Jose  Zavala,04/03/2018,0.32,32,Alto,80,Electronica,Ira,Seguro,1
+Javier Hermenegildo ,05/03/2018,0.24,24,Alto,34,Electronica,Normal,Seguro,1
+Ivan Vazcone el pozo,06/03/2018,0.48,48,Bajo,76,Rock,Ira,Seguro,1
+Hernandez Mujica,07/03/2018,0.4,40,Alto,38,Blues,Tristeza,Riesgoso,1
+Ernesto Perez,03/03/2018,0.45,45,Alto,59,no escucha música,Miedo,Moderado,1
+Ramiro Robles,03/03/2018,0.25,25,Alto,55,Rock,Normal,Seguro,1
+Elizabeth Chicaiza,03/03/2018,0.32,32,Medio,70,Rock,Ira,Riesgoso,1
+Angel Castro,03/03/2018,0.19,19,Bajo,73,pop,Ira,Moderado,1
+Alexandra Sornoza,03/03/2018,0.32,32,Medio,50,Rock,Ira,Riesgoso,1
+Gabriela Sandoval,03/03/2018,0.23,23,Medio,41,Electronica,Tristeza,Riesgoso,1
+Patricio Caviedez,04/03/2018,0.32,32,Medio,40,Rock,Felicidad,Seguro,1
+Rodrigo Chillogalli ,05/03/2018,0.19,19,Medio,41,pop,Felicidad,Moderado,1
+Mariana Muñoz ,06/03/2018,0.36,36,Alto,38,Electronica,Tristeza,Riesgoso,1
+Luis  Moreira,06/03/2018,0.25,25,Alto,34,Rock,Normal,Seguro,1
+Marlon Cepeda,07/03/2018,0.32,32,Medio,50,Rock,Ira,Seguro,1
+Cristina Peñaranda ,03/03/2018,0.19,19,Bajo,83,pop,Ira,Moderado,1
+Marcela de jesus Ochoa,06/03/2018,0.32,32,Medio,64,Rock,Felicidad,Seguro,1
+Carolina Velecela,07/03/2018,0.45,45,Alto,61,no escucha música,Miedo,Moderado,1
+Mariana Molina,03/03/2018,0.25,25,Alto,45,Rock,Normal,Moderado,1
+Pedro Gaibor,03/03/2018,0.32,32,Medio,60,Rock,Ira,Riesgoso,1
+Eduardo Robles,06/03/2018,0.19,19,Medio,70,pop,Ira,Moderado,1
+Santiago Jara,07/03/2018,0.32,32,Medio,50,Rock,Ira,Riesgoso,1
+Jesus Minchala,03/03/2018,0.23,23,Medio,45,no escucha música,Tristeza,Riesgoso,1
+Manuel Lojano,03/03/2018,0.32,32,Medio,69,Rock,Felicidad,Seguro,1
+Paul Chamba,03/03/2018,0.19,19,Medio,35,pop,Felicidad,Moderado,1
