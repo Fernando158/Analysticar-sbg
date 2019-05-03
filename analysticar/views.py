@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from analysticar.models import User
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from io import BytesIO
@@ -110,7 +111,10 @@ def registrarUsuario(request):
       # user.pareja = 1
       # user.hijos = 1
       # print(user.fechaNac)
+      print(ident)
+      print(User.objects)
       if User.objects.filter(ident=ident).exists():
+        print("Hola")
         msg = "Esta cédula ya se encuentra registrada."
         return render(request,'registrar_usuario.html',{'form' : form,'formubi' : formubi, 
                              'msg' : msg,
@@ -207,8 +211,9 @@ def apiMessage(request):
 # Función para determinar el número de reporte, aprobación y orden
 
 def perfil(request):
-  carros = Vehiculo.objects.filter(idUsuario=request.user)
-  return render(request, 'perfil.html', {'carros': carros})
+  # print(usuario)
+  usuario = User.objects.filter(ident=request.user)
+  return render(request, 'perfil.html', {'usuario': usuario})
 
 
 
@@ -219,7 +224,7 @@ def patrones(request):
   client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
   url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"https://analyticar-sbg.mybluemix.net/\"\r\n}"
+  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
     'Content-Type': "application/json",
@@ -242,7 +247,7 @@ def siniestralidad(request):
   client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
   url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"https://analyticar-sbg.mybluemix.net/\"\r\n}"
+  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
     'Content-Type': "application/json",
@@ -265,7 +270,7 @@ def alertas(request):
   client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
   url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"https://analyticar-sbg.mybluemix.net/\"\r\n}"
+  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
     'Content-Type': "application/json",
@@ -282,3 +287,17 @@ def alertas(request):
   print(python_obj["sessionCode"])
   # return response.json()
   return render(request, 'alertas.html',{'sessionCode': sessionCode})
+
+# def migrar(request):
+#   titles = json.loads(open('initial_data.json').read())
+#     # # Create a Django model object for each object in the JSON 
+#   for title in titles['Estado']:
+#     if Municipio.objects.filter(id=title['pk']).exists():
+#       break
+#     Municipio.objects.create(id=title['pk'], Nombre=title['estado'])
+
+#   for title in titles['Ciudad']:
+#     if Urbanizacion.objects.filter(id=title['pk']).exists():
+#       break
+#     Urbanizacion.objects.create(id=title['pk'], Nombre=title['ciudad'],municipio_id=title['estado'])
+#   return render(request, 'registrar_usuario.html', {'form': form})

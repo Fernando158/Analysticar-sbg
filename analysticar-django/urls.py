@@ -18,6 +18,7 @@ from django.contrib import admin
 from . import settings
 from analysticar import views
 from django.conf.urls.static import static
+from analysticar.ajax import get_urbanizacion,get_taller,get_ciudad
 # from analysticar_django.settings import MEDIA_URL, MEDIA_ROOT
 # from analysticar.ajax import get_urbanizacion,get_taller,get_ciudad
 urlpatterns = [
@@ -30,4 +31,7 @@ urlpatterns = [
     url(r'^patrones', views.patrones, name="patrones"),
     url(r'^siniestralidad', views.siniestralidad, name="siniestralidad"),
     url(r'^alertas$', views.alertas, name="alertas"),
+    url(r'^ajax/get_urbanizacion/$', get_urbanizacion, name='get_urbanizacion'),
+    url(r'^ajax/get_taller/$', get_taller, name='get_taller'),
+    url(r'^ajax/get_ciudad/$', get_ciudad, name='get_ciudad'),
 ]
