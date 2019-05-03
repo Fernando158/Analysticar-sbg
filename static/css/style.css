@@ -2728,6 +2728,10 @@ header #subheader nav ul li a{
     -webkit-border-radius: 2px;
 }
 
+a{
+  color: #fff;
+}
+
 header #subheader nav ul li a:hover{
   color: #F9D039;
   font-size: 14px;

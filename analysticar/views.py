@@ -15,6 +15,8 @@ from analysticar.models import User
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from io import BytesIO
+from http.client import HTTPSConnection
+from base64 import b64encode
 from django.contrib import messages
 from django.db.models import Q
 import errno
@@ -53,6 +55,10 @@ workspace_id = '796c9c34-4909-45a1-8195-56a586476843'
 #Archivos Temporales
 __all__ = ('UploadedFile', 'TemporaryUploadedFile', 'InMemoryUploadedFile',
            'SimpleUploadedFile')
+
+client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
+client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
+url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
 #-------- Vista de la página principal --------#
 def home(request):
@@ -219,16 +225,17 @@ def perfil(request):
 
 #------- Vista para el reporte de siniestros -------#
 
-def patrones(request):
-  client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
-  client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
-  url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
+userAndPass = b64encode(b"%s:%s" % (
+              client_id,
+              client_secret
+          )).decode("ascii")
 
+def patrones(request):
   payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
     'Content-Type': "application/json",
-    'Authorization': "Basic MWU3ZjY1ZjgtMDYzZS00ODA0LWJmZmEtOWRjOWMwZTdhYTdhOjM4OWRkMTRkMjE5NjhlMmQ5MTg1YzU5YTQyZjg5NmI3ZDIxNDQ2YmU="
+    'Authorization' : 'Basic %s' %  userAndPass
     }
 
   response = requests.request("POST", url, data=payload, headers=headers)
@@ -243,10 +250,6 @@ def patrones(request):
   return render(request, 'patrones.html',{'sessionCode': sessionCode})
 
 def siniestralidad(request):
-  client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
-  client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
-  url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
-
   payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
@@ -266,10 +269,6 @@ def siniestralidad(request):
   return render(request, 'siniestralidad.html',{'sessionCode': sessionCode})
 
 def alertas(request):
-  client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
-  client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
-  url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
-
   payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
   headers = {
     'accept': "application/json",
