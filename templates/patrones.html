@@ -162,6 +162,20 @@
     var sampleBikeShareRidesDemographModule = {
   "xsd": "https://ibm.com/daas/module/1.0/module.xsd",
   "source": {
+        "id": "StringID",
+        "jdbc": {
+          "jdbcUrl":"jdbc:postgresql://500aaa93-4b2a-4c61-92b5-d4d5932aadb0.0135ec03d5bf43b196433793c98e8bd5.databases.appdomain.cloud:31481/DATABASE=ibmclouddb",
+          "driverClassName": "org.postgresql.Driver",
+          "connectionProperties": "OPTIONAL=TRUE;LOGINTIMEOUT=0",
+          "catalog": "PostgreSql",
+          "schema": "public"
+        },
+        "user": "user_name",
+        "password": "password"
+    },
+
+
+  "source": {
     "id": "CSV_File",
     "srcUrl": {
       "sourceUrl": "https://analyticar-sbg.mybluemix.net/static/Data_Transport_Sensor_v3_1.csv",

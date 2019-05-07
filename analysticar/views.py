@@ -56,8 +56,8 @@ workspace_id = '796c9c34-4909-45a1-8195-56a586476843'
 __all__ = ('UploadedFile', 'TemporaryUploadedFile', 'InMemoryUploadedFile',
            'SimpleUploadedFile')
 
-client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
-client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
+# client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
+# client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
 url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
 #-------- Vista de la página principal --------#
@@ -223,67 +223,46 @@ def perfil(request):
 
 
 
-#------- Vista para el reporte de siniestros -------#
+#------- Habilita Sesiones para Cognos -------#
+def sesion(request):
+	usuario=request.user
+	client_id=usuario.client_id.encode()
+	client_secret=usuario.client_secret.encode()
+	userAndPass = b64encode(b"%s:%s" % (
+	              client_id,
+	              client_secret
+	          )).decode("ascii")
 
-userAndPass = b64encode(b"%s:%s" % (
-              client_id,
-              client_secret
-          )).decode("ascii")
+	payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
+	headers = {
+	'accept': "application/json",
+	'Content-Type': "application/json",
+	'Authorization' : 'Basic %s' %  userAndPass
+	}
+
+	response = requests.request("POST", url, data=payload, headers=headers)
+
+	json_data = response.text
+
+	python_obj = json.loads(json_data)
+
+	global sessionCode
+	sessionCode = python_obj["sessionCode"]
+	print(python_obj["sessionCode"])
+	
 
 def patrones(request):
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
-  headers = {
-    'accept': "application/json",
-    'Content-Type': "application/json",
-    'Authorization' : 'Basic %s' %  userAndPass
-    }
-
-  response = requests.request("POST", url, data=payload, headers=headers)
-
-  json_data = response.text
-
-  python_obj = json.loads(json_data)
-
-  sessionCode = python_obj["sessionCode"]
-  print(python_obj["sessionCode"])
+  sesion(request)
   # return response.json()
   return render(request, 'patrones.html',{'sessionCode': sessionCode})
 
 def siniestralidad(request):
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
-  headers = {
-    'accept': "application/json",
-    'Content-Type': "application/json",
-    'Authorization': "Basic MWU3ZjY1ZjgtMDYzZS00ODA0LWJmZmEtOWRjOWMwZTdhYTdhOjM4OWRkMTRkMjE5NjhlMmQ5MTg1YzU5YTQyZjg5NmI3ZDIxNDQ2YmU="
-    }
-
-  response = requests.request("POST", url, data=payload, headers=headers)
-
-  json_data = response.text
-
-  python_obj = json.loads(json_data)
-
-  sessionCode = python_obj["sessionCode"]
-  print(python_obj["sessionCode"])
+  sesion(request)
   # return response.json()
   return render(request, 'siniestralidad.html',{'sessionCode': sessionCode})
 
 def alertas(request):
-  payload = "{\r\n  \"expiresIn\": 3600,\r\n  \"webDomain\": \"http://localhost:8000/\"\r\n}"
-  headers = {
-    'accept': "application/json",
-    'Content-Type': "application/json",
-    'Authorization': "Basic MWU3ZjY1ZjgtMDYzZS00ODA0LWJmZmEtOWRjOWMwZTdhYTdhOjM4OWRkMTRkMjE5NjhlMmQ5MTg1YzU5YTQyZjg5NmI3ZDIxNDQ2YmU="
-    }
-
-  response = requests.request("POST", url, data=payload, headers=headers)
-
-  json_data = response.text
-
-  python_obj = json.loads(json_data)
-
-  sessionCode = python_obj["sessionCode"]
-  print(python_obj["sessionCode"])
+  sesion(request)
   # return response.json()
   return render(request, 'alertas.html',{'sessionCode': sessionCode})
 

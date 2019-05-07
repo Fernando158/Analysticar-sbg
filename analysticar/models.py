@@ -106,6 +106,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     opcionesBin = ((1, 'Si'), (0, 'No'))
     pareja = models.PositiveIntegerField(choices = opcionesBin)
     hijos = models.PositiveIntegerField(choices = opcionesBin)
+    client_id = models.CharField(blank = True, null = True, max_length = 50)
+    client_secret = models.CharField(blank = True, null = True, max_length = 50)
     # validation_status =
 
     USERNAME_FIELD = 'ident'
