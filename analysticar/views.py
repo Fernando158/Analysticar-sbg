@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from analysticar.models import *
 from analysticar.forms import *
 from django.http import HttpResponseRedirect, HttpResponse
-from watson_developer_cloud import VisualRecognitionV3 as VisualRecognition
+# from watson_developer_cloud import VisualRecognitionV3 as VisualRecognition
 from django.http import HttpResponseServerError
-from watson_developer_cloud import AssistantV1
+
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -36,29 +36,29 @@ import zipfile
 
 
 # API Key del servicio de Visual Recognition en Bluemix
-API_KEY_VISUAL = 'iM10sei5P9VeEyEraNLXFGNvW5uNagfefkkqq5-FLwuy'
+# API_KEY_VISUAL = 'iM10sei5P9VeEyEraNLXFGNvW5uNagfefkkqq5-FLwuy'
 
-# Lista con los ID de los modelos usados
-clasificadores = ['Analyticar_1124825301']
+# # Lista con los ID de los modelos usados
+# clasificadores = ['Analyticar_1124825301']
 
-# Creamos una instancia del servicio de Visual Recognition
-visual_recognition = VisualRecognition('2018-03-19',iam_apikey=API_KEY_VISUAL)
+# # Creamos una instancia del servicio de Visual Recognition
+# visual_recognition = VisualRecognition('2018-03-19',iam_apikey=API_KEY_VISUAL)
 
-conversation = AssistantV1(
-    version='2018-07-10',
-    ## url is optional, and defaults to the URL below. Use the correct URL for your region.
-    url='https://gateway.watsonplatform.net/assistant/api',
-    iam_apikey='XMhojkQjclmpi53yFvOzMAuNCr52CKPA5jdM9hNpKi6O')
+# conversation = AssistantV1(
+#     version='2018-07-10',
+#     ## url is optional, and defaults to the URL below. Use the correct URL for your region.
+#     url='https://gateway.watsonplatform.net/assistant/api',
+#     iam_apikey='XMhojkQjclmpi53yFvOzMAuNCr52CKPA5jdM9hNpKi6O')
 
-workspace_id = '796c9c34-4909-45a1-8195-56a586476843'
+# workspace_id = '796c9c34-4909-45a1-8195-56a586476843'
 
-#Archivos Temporales
-__all__ = ('UploadedFile', 'TemporaryUploadedFile', 'InMemoryUploadedFile',
-           'SimpleUploadedFile')
+# #Archivos Temporales
+# __all__ = ('UploadedFile', 'TemporaryUploadedFile', 'InMemoryUploadedFile',
+#            'SimpleUploadedFile')
 
-# client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
-# client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
-url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
+# # client_id=b'1e7f65f8-063e-4804-bffa-9dc9c0e7aa7a'
+# # client_secret=b'389dd14d21968e2d9185c59a42f896b7d21446be'
+# url = "https://us-south.dynamic-dashboard-embedded.cloud.ibm.com/daas/v1/session"
 
 #-------- Vista de la página principal --------#
 def home(request):
@@ -154,67 +154,67 @@ def registrarUsuario(request):
 #           inputW The request to the watson_assistant service
 #           response The response from the watson_assistant service
 # @return {Object}          The response with the updated message
-def updateMessage(inputW, response):
-  responseText = ""
-  if not(response['output']):
-    response['output'] = {}
-  else:
-    return response
+# def updateMessage(inputW, response):
+#   responseText = ""
+#   if not(response['output']):
+#     response['output'] = {}
+#   else:
+#     return response
 
-  if response['intents'] and response['intents'][0]:
-    intent = response['intents'][0]
+#   if response['intents'] and response['intents'][0]:
+#     intent = response['intents'][0]
 
-    if intent['confidence'] >= 0.75:
-      responseText = 'I understood your intent was ' + intent['intent']
-    elif intent['confidence'] >= 0.5:
-      responseText = 'I think your intent was ' + intent['intent']
-    else:
-      responseText = 'I did not understand your intent'
+#     if intent['confidence'] >= 0.75:
+#       responseText = 'I understood your intent was ' + intent['intent']
+#     elif intent['confidence'] >= 0.5:
+#       responseText = 'I think your intent was ' + intent['intent']
+#     else:
+#       responseText = 'I did not understand your intent'
 
-  response['output']['text'] = responseText
-  return response
+#   response['output']['text'] = responseText
+#   return response
 
-@csrf_exempt
-def apiMessage(request):
-  global conversation, workspace_id
+# @csrf_exempt
+# def apiMessage(request):
+#   global conversation, workspace_id
 
-  if request.method == 'POST':
-    json_str=((request.body).decode('utf-8'))
-    json_obj=json.loads(json_str)
+#   if request.method == 'POST':
+#     json_str=((request.body).decode('utf-8'))
+#     json_obj=json.loads(json_str)
 
-    print(json_obj)
-    if not('input' in json_obj):
-        inputW = {'text': ''}
-        if not('context' in json_obj):
-            context = {}
-        else:
-            context = json_obj['context']
-    else:
-        inputW = json_obj['input']
-        context = json_obj['context']
+#     print(json_obj)
+#     if not('input' in json_obj):
+#         inputW = {'text': ''}
+#         if not('context' in json_obj):
+#             context = {}
+#         else:
+#             context = json_obj['context']
+#     else:
+#         inputW = json_obj['input']
+#         context = json_obj['context']
     
-    #Para agregar datos del usuario al contexto
-    if request.user.is_authenticated():
-      context['name'] = request.user.first_name
+#     #Para agregar datos del usuario al contexto
+#     if request.user.is_authenticated():
+#       context['name'] = request.user.first_name
     
-    payload = {
-            'workspace_id': workspace_id,
-            'context': context,
-            'input': inputW
-    }
+#     payload = {
+#             'workspace_id': workspace_id,
+#             'context': context,
+#             'input': inputW
+#     }
     
   
-    if inputW != {}:  
-      if 'tipo_inspeccion' in payload['context']:
-        payload['context'].pop('tipo_inspeccion', None)
-      elif 'redes_sociales' in payload['context']:
-        payload['context'].pop('redes_sociales', None)            
+#     if inputW != {}:  
+#       if 'tipo_inspeccion' in payload['context']:
+#         payload['context'].pop('tipo_inspeccion', None)
+#       elif 'redes_sociales' in payload['context']:
+#         payload['context'].pop('redes_sociales', None)            
 
-    response = conversation.message(workspace_id=workspace_id, input=inputW, context=context)
+#     response = conversation.message(workspace_id=workspace_id, input=inputW, context=context)
 
-    return JsonResponse(updateMessage(payload, response))
+#     return JsonResponse(updateMessage(payload, response))
 
-# Función para determinar el número de reporte, aprobación y orden
+# # Función para determinar el número de reporte, aprobación y orden
 
 def perfil(request):
   # print(usuario)
@@ -226,6 +226,8 @@ def perfil(request):
 #------- Habilita Sesiones para Cognos -------#
 def sesion(request):
 	usuario=request.user
+  print(usuario)
+  print(usuario.client_id)
 	client_id=usuario.client_id.encode()
 	client_secret=usuario.client_secret.encode()
 	userAndPass = b64encode(b"%s:%s" % (
@@ -252,8 +254,9 @@ def sesion(request):
 	
 
 def patrones(request):
-  sesion(request)
+  # sesion(request)
   # return response.json()
+  sessionCode="CDfb41cacb30d85429713b"
   return render(request, 'patrones.html',{'sessionCode': sessionCode})
 
 def siniestralidad(request):
