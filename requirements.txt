@@ -1,5 +1,5 @@
 Django==1.11.2
-PyYAML==3.11
+PyYAML==5.4
 anyjson==0.3.3
 autoenv==1.0.0
 dj-database-url==0.4.1
