@@ -1,4 +1,4 @@
-Django==1.11.2
+Django==2.2.24
 PyYAML==3.11
 anyjson==0.3.3
 autoenv==1.0.0
