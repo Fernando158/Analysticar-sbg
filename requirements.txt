@@ -12,4 +12,4 @@ requests==2.17.3
 watson-developer-cloud==1.7.1
 olefile==0.44
 Pillow==5.1.0
-reportlab==3.4.0
+reportlab==3.5.55
